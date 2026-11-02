@@ -10,3 +10,4 @@ renders/
 hyperframes/.hyperframes/
 # Capturas de proyectos usadas por los videos (sí se versionan)
 !remotion/public/footage/*.mp4
+!remotion/public/footage/*.webm

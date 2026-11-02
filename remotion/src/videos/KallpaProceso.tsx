@@ -1,7 +1,16 @@
 import React from "react";
-import { AbsoluteFill, Easing, interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
+import {
+  AbsoluteFill,
+  Easing,
+  interpolate,
+  OffthreadVideo,
+  spring,
+  staticFile,
+  useCurrentFrame,
+  useVideoConfig,
+} from "remotion";
 import "../brand/fonts";
-import { BlueGlow, DashedGrid, Grain, Sparks } from "../brand/elements";
+import { BlueGlow, BlueWaves, DashedGrid, Grain, Sparks } from "../brand/elements";
 import { FootageCard } from "../brand/FootageCard";
 import { C, EASE_OUT, F } from "../brand/tokens";
 
@@ -66,6 +75,74 @@ export const CarouselScene: React.FC = () => {
         Y la puse a <SpinWord text="girar" delay={20} size={92} />
       </div>
       <Grain opacity={0.07} />
+    </AbsoluteFill>
+  );
+};
+
+/**
+ * Escena 03 integrada: las latas (captura con fondo transparente) flotan a sangre sobre
+ * las olas azules y la palabra "girar" gigante queda detrás de ellas, como el hero de la web.
+ */
+export const CarouselStory: React.FC = () => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const lineIn = interpolate(frame, [4, 18], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: easeOut });
+  const spin = spring({ frame: frame - 10, fps, config: { damping: 20, mass: 1.1 } });
+  const drift = interpolate(frame, [0, 135], [30, -30]);
+  return (
+    <AbsoluteFill>
+      <BlueWaves />
+      <Sparks seed="girar" count={14} />
+      {/* Palabra gigante detrás de las latas */}
+      <AbsoluteFill style={{ justifyContent: "center", alignItems: "center", perspective: 1400 }}>
+        <div
+          style={{
+            fontFamily: F.serif,
+            fontStyle: "italic",
+            fontSize: 470,
+            lineHeight: 1,
+            color: C.ink,
+            letterSpacing: "-0.03em",
+            marginTop: -640,
+            opacity: interpolate(spin, [0, 0.3], [0, 1], { extrapolateRight: "clamp" }),
+            transform: `translateX(${drift}px) rotateY(${(1 - spin) * -300}deg)`,
+          }}
+        >
+          girar
+        </div>
+      </AbsoluteFill>
+      {/* Latas integradas, sin marco */}
+      <AbsoluteFill style={{ justifyContent: "center", alignItems: "center" }}>
+        <OffthreadVideo
+          src={staticFile("footage/kallpa-alpha.webm")}
+          transparent
+          muted
+          style={{
+            width: 1060,
+            height: 1325,
+            marginTop: 470,
+            filter: "drop-shadow(0 50px 60px rgba(0,0,0,.55)) drop-shadow(0 0 40px rgba(29,78,216,.35))",
+          }}
+        />
+      </AbsoluteFill>
+      {/* Frase pequeña */}
+      <div
+        style={{
+          position: "absolute",
+          left: 90,
+          top: 250,
+          fontFamily: F.sans,
+          fontWeight: 500,
+          fontSize: 64,
+          letterSpacing: "-0.02em",
+          color: C.ink,
+          opacity: lineIn,
+          filter: `blur(${(1 - lineIn) * 10}px)`,
+        }}
+      >
+        Y la puse a
+      </div>
+      <Grain opacity={0.08} />
     </AbsoluteFill>
   );
 };

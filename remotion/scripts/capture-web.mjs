@@ -15,6 +15,7 @@
 //   css: "body{cursor:none}",              // CSS extra opcional
 //   setup: async (page) => {},             // antes del primer cuadro
 //   onFrame: async (page, { frame, t }) => {}, // antes de cada cuadro (t en segundos)
+//   transparent: true,                     // fondo transparente → public/footage/<nombre>.webm (VP9 con alfa)
 // }
 
 import { execFileSync } from "node:child_process";
@@ -54,6 +55,9 @@ await page.clock.pauseAt(new Date(Date.now() + 60_000));
 if (sc.setup) await sc.setup(page);
 
 const cdp = await page.context().newCDPSession(page);
+if (sc.transparent) {
+  await cdp.send("Emulation.setDefaultBackgroundColorOverride", { color: { r: 0, g: 0, b: 0, a: 0 } });
+}
 const started = Date.now();
 for (let frame = 0; frame < total; frame++) {
   if (sc.onFrame) await sc.onFrame(page, { frame, t: frame / fps, fps });
@@ -73,10 +77,12 @@ await browser.close();
 
 const outDir = join(root, "public/footage");
 mkdirSync(outDir, { recursive: true });
-const out = join(outDir, `${sc.name}.mp4`);
+const out = join(outDir, `${sc.name}.${sc.transparent ? "webm" : "mp4"}`);
+const encode = sc.transparent
+  ? ["-c:v", "libvpx-vp9", "-pix_fmt", "yuva420p", "-b:v", "0", "-crf", "18", "-row-mt", "1", "-auto-alt-ref", "0"]
+  : ["-c:v", "libx264", "-crf", "16", "-preset", "slow", "-pix_fmt", "yuv420p", "-movflags", "+faststart"];
 execFileSync("ffmpeg", [
-  "-v", "error", "-y", "-framerate", String(fps), "-i", join(framesDir, "f%05d.png"),
-  "-c:v", "libx264", "-crf", "16", "-preset", "slow", "-pix_fmt", "yuv420p", "-movflags", "+faststart", out,
+  "-v", "error", "-y", "-framerate", String(fps), "-i", join(framesDir, "f%05d.png"), ...encode, out,
 ]);
 rmSync(framesDir, { recursive: true, force: true });
 console.log(`Listo: ${out}`);
