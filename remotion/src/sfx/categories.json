@@ -1,0 +1,11 @@
+[
+  { "slug": "cinematic-whooshes", "label": "Cinematic Whooshes" },
+  { "slug": "bass-impacts", "label": "Bass Impacts" },
+  { "slug": "risers", "label": "Risers" },
+  { "slug": "transitions", "label": "Transitions" },
+  { "slug": "ui-sounds", "label": "UI Sounds" },
+  { "slug": "product-sounds", "label": "Product Sounds" },
+  { "slug": "ambient-sounds", "label": "Ambient Sounds" },
+  { "slug": "nature", "label": "Nature" },
+  { "slug": "sports", "label": "Sports" }
+]

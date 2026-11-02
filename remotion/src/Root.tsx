@@ -1,5 +1,6 @@
 import { Composition, Folder } from "remotion";
 import { HelloWorld } from "./HelloWorld";
+import { SfxDemo } from "./SfxDemo";
 import { Logo } from "./HelloWorld/Logo";
 import { Title } from "./HelloWorld/Title";
 
@@ -51,6 +52,14 @@ export const RemotionRoot: React.FC = () => {
         }}
       />
 
+      <Composition
+        id="SfxDemo"
+        component={SfxDemo}
+        durationInFrames={150}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
     </>
   );
 };
