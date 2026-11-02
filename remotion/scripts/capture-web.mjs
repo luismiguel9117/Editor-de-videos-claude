@@ -84,5 +84,5 @@ const encode = sc.transparent
 execFileSync("ffmpeg", [
   "-v", "error", "-y", "-framerate", String(fps), "-i", join(framesDir, "f%05d.png"), ...encode, out,
 ]);
-rmSync(framesDir, { recursive: true, force: true });
+if (!process.env.KEEP_FRAMES) rmSync(framesDir, { recursive: true, force: true });
 console.log(`Listo: ${out}`);

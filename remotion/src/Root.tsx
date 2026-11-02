@@ -2,6 +2,7 @@ import { Composition, Folder } from "remotion";
 import { HelloWorld } from "./HelloWorld";
 import { SfxDemo } from "./SfxDemo";
 import { KALLPA_REEL, KallpaReel } from "./videos/KallpaReel";
+import { KALPA_SCENES } from "./videos/kalpa/scenes";
 import { CarouselScene, CarouselStory, KALLPA_PROCESO_CAROUSEL } from "./videos/KallpaProceso";
 import { Logo } from "./HelloWorld/Logo";
 import { Title } from "./HelloWorld/Title";
@@ -54,6 +55,11 @@ export const RemotionRoot: React.FC = () => {
         }}
       />
 
+      <Folder name="KALPA-proceso">
+        {KALPA_SCENES.map((s) => (
+          <Composition key={s.id} id={s.id} component={s.component} fps={30} width={1080} height={1920} durationInFrames={90} />
+        ))}
+      </Folder>
       <Folder name="Reels">
         <Composition id="KallpaReel" component={KallpaReel} {...KALLPA_REEL} />
         <Composition id="KallpaProceso-Carrusel" component={CarouselScene} {...KALLPA_PROCESO_CAROUSEL} />
