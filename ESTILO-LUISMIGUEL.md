@@ -112,7 +112,7 @@ Tamaños (alto del texto respecto al alto del cuadro):
   1. **Bienvenida**: "Bienvenido" → "a mi" → "*portafolio*"
   2. **Pregunta**: "¿Tienes un proyecto en mente?"
   3. **Promesa**: "Hagamos que tus ideas" → "cobren" → "*vida*"
-  4. **Firma**: "Luis *Miguel*." + `luismiguel.pe` en mono
+  4. **Firma**: "Luis *Miguel*." (sin subtítulo por ahora)
 - Variante en inglés tomada de la web: "Mostly, I design websites." /
   "Turning rough ideas into *feeling*."
 - **Proyectos a mostrar** (de `data/portfolio.ts`): Velora House, VibeMove, Meridian,
@@ -213,7 +213,7 @@ Formatos de salida:
 ## 8. Firma y cierre
 
 - Siempre termina con **"Luis *Miguel*."**: "Luis" Inter 500, "Miguel" Instrument Serif italic, punto en `#ff3b30`.
-- Debajo, `luismiguel.pe` en Space Mono, `dim`, pequeño.
+- Sin subtítulo debajo del nombre (por ahora no se pone `luismiguel.pe` ni otra línea).
 - Fondo `surface` con grano; glow muy suave detrás del nombre (`0 0 24px rgba(240,236,244,.35)`).
 - 2–3 s quietos. No agregar logos de redes ni marcas de agua.
 
@@ -229,5 +229,5 @@ Formatos de salida:
 - [ ] Cada transición coincide con un acento de audio.
 - [ ] SFX con licencia comercial verificada; −14 LUFS; picos ≤ −1 dBTP.
 - [ ] Zonas seguras respetadas en vertical.
-- [ ] Termina en la firma "Luis *Miguel*." + `luismiguel.pe`.
+- [ ] Termina en la firma "Luis *Miguel*.", sin subtítulo.
 - [ ] Nada de la referencia (nombre "Hatsu", su copy, logos de TikTok) aparece en el video.
