@@ -2,9 +2,9 @@
 // Sintetiza una pista musical propia (sin muestras de terceros) a 120 BPM,
 // con secciones que caen en los cortes del video.
 //
-// Uso: node scripts/music-generate.mjs <salida.wav> [duraciónSeg] [drops...]
-//   drops: segundos donde entra el beat completo, p. ej. "3 13"; el beat se corta en
-//   la sección "break" (entre el fin del primer drop y el segundo) y en el final.
+// Uso: node scripts/music-generate.mjs <salida.wav> [duraciónSeg] [drop1] [drop2] [impacto]
+//   drop1 y drop2: tramos con beat completo, "inicio-fin" en segundos (p. ej. "3.5-14").
+//   impacto: segundo del golpe final (p. ej. 23.5).
 //
 // Estructura por defecto (reel de 24 s): intro 0–3 · drop 3–10 · break 10–13 ·
 // drop 13–19 · outro 19–24 (impacto final en 21).
@@ -20,7 +20,12 @@ const N = Math.round(DUR * SR);
 const L = new Float32Array(N);
 const R = new Float32Array(N);
 
-const SECTIONS = { drop1: [3, 10], drop2: [13, 19], outroHit: 21 };
+const range = (arg, def) => (arg ? arg.split("-").map(Number) : def);
+const SECTIONS = {
+  drop1: range(process.argv[4], [3, 10]),
+  drop2: range(process.argv[5], [13, 19]),
+  outroHit: Number(process.argv[6] ?? 21),
+};
 const inRange = (t, [a, b]) => t >= a && t < b;
 const beatOn = (t) => inRange(t, SECTIONS.drop1) || inRange(t, SECTIONS.drop2);
 

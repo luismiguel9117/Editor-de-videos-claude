@@ -157,9 +157,10 @@ export const S2Plano: React.FC = () => {
 };
 
 // 3 · "Luego la construí capa por capa: la lata, la etiqueta y las gotas"
-export const S3Capas: React.FC = () => {
+export const S3Capas: React.FC<{ closeAt?: number }> = ({ closeAt = 95 }) => {
   const f = useCurrentFrame();
-  const open = ease(f, 6, 36);
+  // Las capas se separan y, al final, se vuelven a juntar
+  const open = ease(f, 6, 36) - ease(f, closeAt, closeAt + 14);
   return (
     <Blue>
       <Line>Luego la construí</Line>
