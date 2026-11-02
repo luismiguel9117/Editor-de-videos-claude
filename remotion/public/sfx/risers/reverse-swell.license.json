@@ -1,0 +1,22 @@
+{
+  "id": "risers/reverse-swell",
+  "name": "Reverse Swell",
+  "category": "risers",
+  "tags": [
+    "riser",
+    "swell",
+    "reverse",
+    "build",
+    "premium"
+  ],
+  "durationSec": 1.6,
+  "file": "sfx/risers/reverse-swell.wav",
+  "source": "generated",
+  "sourceUrl": "scripts/sfx-premium.mjs",
+  "license": {
+    "name": "Obra propia (síntesis)",
+    "author": "Luis Miguel",
+    "commercialUse": true,
+    "attributionRequired": false
+  }
+}

@@ -24,6 +24,28 @@
       }
     },
     {
+      "id": "ambient-sounds/night-air",
+      "name": "Night Air",
+      "category": "ambient-sounds",
+      "tags": [
+        "ambient",
+        "room",
+        "air",
+        "bed",
+        "premium"
+      ],
+      "durationSec": 10,
+      "file": "sfx/ambient-sounds/night-air.wav",
+      "source": "generated",
+      "sourceUrl": "scripts/sfx-premium.mjs",
+      "license": {
+        "name": "Obra propia (síntesis)",
+        "author": "Luis Miguel",
+        "commercialUse": true,
+        "attributionRequired": false
+      }
+    },
+    {
       "id": "ambient-sounds/pulse-bed-110-bpm",
       "name": "Pulse Bed 110 BPM",
       "category": "ambient-sounds",
@@ -67,6 +89,28 @@
       }
     },
     {
+      "id": "bass-impacts/soft-impact",
+      "name": "Soft Impact",
+      "category": "bass-impacts",
+      "tags": [
+        "impact",
+        "boom",
+        "soft",
+        "logo",
+        "premium"
+      ],
+      "durationSec": 3.2,
+      "file": "sfx/bass-impacts/soft-impact.wav",
+      "source": "generated",
+      "sourceUrl": "scripts/sfx-premium.mjs",
+      "license": {
+        "name": "Obra propia (síntesis)",
+        "author": "Luis Miguel",
+        "commercialUse": true,
+        "attributionRequired": false
+      }
+    },
+    {
       "id": "bass-impacts/sub-hit",
       "name": "Sub Hit",
       "category": "bass-impacts",
@@ -89,6 +133,28 @@
       }
     },
     {
+      "id": "bass-impacts/sub-swell",
+      "name": "Sub Swell",
+      "category": "bass-impacts",
+      "tags": [
+        "sub",
+        "swell",
+        "low",
+        "tension",
+        "premium"
+      ],
+      "durationSec": 2.2,
+      "file": "sfx/bass-impacts/sub-swell.wav",
+      "source": "generated",
+      "sourceUrl": "scripts/sfx-premium.mjs",
+      "license": {
+        "name": "Obra propia (síntesis)",
+        "author": "Luis Miguel",
+        "commercialUse": true,
+        "attributionRequired": false
+      }
+    },
+    {
       "id": "cinematic-whooshes/air-whoosh",
       "name": "Air Whoosh",
       "category": "cinematic-whooshes",
@@ -102,6 +168,50 @@
       "file": "sfx/cinematic-whooshes/air-whoosh.wav",
       "source": "generated",
       "sourceUrl": "scripts/sfx-generate.mjs",
+      "license": {
+        "name": "Obra propia (síntesis)",
+        "author": "Luis Miguel",
+        "commercialUse": true,
+        "attributionRequired": false
+      }
+    },
+    {
+      "id": "cinematic-whooshes/deep-pass",
+      "name": "Deep Pass",
+      "category": "cinematic-whooshes",
+      "tags": [
+        "whoosh",
+        "deep",
+        "low",
+        "transition",
+        "premium"
+      ],
+      "durationSec": 1.6,
+      "file": "sfx/cinematic-whooshes/deep-pass.wav",
+      "source": "generated",
+      "sourceUrl": "scripts/sfx-premium.mjs",
+      "license": {
+        "name": "Obra propia (síntesis)",
+        "author": "Luis Miguel",
+        "commercialUse": true,
+        "attributionRequired": false
+      }
+    },
+    {
+      "id": "cinematic-whooshes/silk-sweep",
+      "name": "Silk Sweep",
+      "category": "cinematic-whooshes",
+      "tags": [
+        "whoosh",
+        "sweep",
+        "air",
+        "transition",
+        "premium"
+      ],
+      "durationSec": 1.8,
+      "file": "sfx/cinematic-whooshes/silk-sweep.wav",
+      "source": "generated",
+      "sourceUrl": "scripts/sfx-premium.mjs",
       "license": {
         "name": "Obra propia (síntesis)",
         "author": "Luis Miguel",
@@ -173,6 +283,28 @@
       }
     },
     {
+      "id": "product-sounds/electric-hum",
+      "name": "Electric Hum",
+      "category": "product-sounds",
+      "tags": [
+        "electric",
+        "hum",
+        "energy",
+        "current",
+        "premium"
+      ],
+      "durationSec": 4.5,
+      "file": "sfx/product-sounds/electric-hum.wav",
+      "source": "generated",
+      "sourceUrl": "scripts/sfx-premium.mjs",
+      "license": {
+        "name": "Obra propia (síntesis)",
+        "author": "Luis Miguel",
+        "commercialUse": true,
+        "attributionRequired": false
+      }
+    },
+    {
       "id": "product-sounds/electric-zap",
       "name": "Electric Zap",
       "category": "product-sounds",
@@ -187,6 +319,28 @@
       "file": "sfx/product-sounds/electric-zap.wav",
       "source": "generated",
       "sourceUrl": "scripts/sfx-generate.mjs",
+      "license": {
+        "name": "Obra propia (síntesis)",
+        "author": "Luis Miguel",
+        "commercialUse": true,
+        "attributionRequired": false
+      }
+    },
+    {
+      "id": "product-sounds/glint",
+      "name": "Glint",
+      "category": "product-sounds",
+      "tags": [
+        "glint",
+        "shimmer",
+        "spark",
+        "sparkle",
+        "premium"
+      ],
+      "durationSec": 2.2,
+      "file": "sfx/product-sounds/glint.wav",
+      "source": "generated",
+      "sourceUrl": "scripts/sfx-premium.mjs",
       "license": {
         "name": "Obra propia (síntesis)",
         "author": "Luis Miguel",
@@ -216,6 +370,28 @@
       }
     },
     {
+      "id": "risers/reverse-swell",
+      "name": "Reverse Swell",
+      "category": "risers",
+      "tags": [
+        "riser",
+        "swell",
+        "reverse",
+        "build",
+        "premium"
+      ],
+      "durationSec": 1.6,
+      "file": "sfx/risers/reverse-swell.wav",
+      "source": "generated",
+      "sourceUrl": "scripts/sfx-premium.mjs",
+      "license": {
+        "name": "Obra propia (síntesis)",
+        "author": "Luis Miguel",
+        "commercialUse": true,
+        "attributionRequired": false
+      }
+    },
+    {
       "id": "risers/tone-riser",
       "name": "Tone Riser",
       "category": "risers",
@@ -229,6 +405,27 @@
       "file": "sfx/risers/tone-riser.wav",
       "source": "generated",
       "sourceUrl": "scripts/sfx-generate.mjs",
+      "license": {
+        "name": "Obra propia (síntesis)",
+        "author": "Luis Miguel",
+        "commercialUse": true,
+        "attributionRequired": false
+      }
+    },
+    {
+      "id": "transitions/air-transition",
+      "name": "Air Transition",
+      "category": "transitions",
+      "tags": [
+        "transition",
+        "air",
+        "soft",
+        "premium"
+      ],
+      "durationSec": 1.1,
+      "file": "sfx/transitions/air-transition.wav",
+      "source": "generated",
+      "sourceUrl": "scripts/sfx-premium.mjs",
       "license": {
         "name": "Obra propia (síntesis)",
         "author": "Luis Miguel",

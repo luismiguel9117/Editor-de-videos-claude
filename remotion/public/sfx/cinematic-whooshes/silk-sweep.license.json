@@ -1,0 +1,22 @@
+{
+  "id": "cinematic-whooshes/silk-sweep",
+  "name": "Silk Sweep",
+  "category": "cinematic-whooshes",
+  "tags": [
+    "whoosh",
+    "sweep",
+    "air",
+    "transition",
+    "premium"
+  ],
+  "durationSec": 1.8,
+  "file": "sfx/cinematic-whooshes/silk-sweep.wav",
+  "source": "generated",
+  "sourceUrl": "scripts/sfx-premium.mjs",
+  "license": {
+    "name": "Obra propia (síntesis)",
+    "author": "Luis Miguel",
+    "commercialUse": true,
+    "attributionRequired": false
+  }
+}

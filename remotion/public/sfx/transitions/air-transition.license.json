@@ -1,0 +1,21 @@
+{
+  "id": "transitions/air-transition",
+  "name": "Air Transition",
+  "category": "transitions",
+  "tags": [
+    "transition",
+    "air",
+    "soft",
+    "premium"
+  ],
+  "durationSec": 1.1,
+  "file": "sfx/transitions/air-transition.wav",
+  "source": "generated",
+  "sourceUrl": "scripts/sfx-premium.mjs",
+  "license": {
+    "name": "Obra propia (síntesis)",
+    "author": "Luis Miguel",
+    "commercialUse": true,
+    "attributionRequired": false
+  }
+}

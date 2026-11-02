@@ -1,0 +1,22 @@
+{
+  "id": "cinematic-whooshes/deep-pass",
+  "name": "Deep Pass",
+  "category": "cinematic-whooshes",
+  "tags": [
+    "whoosh",
+    "deep",
+    "low",
+    "transition",
+    "premium"
+  ],
+  "durationSec": 1.6,
+  "file": "sfx/cinematic-whooshes/deep-pass.wav",
+  "source": "generated",
+  "sourceUrl": "scripts/sfx-premium.mjs",
+  "license": {
+    "name": "Obra propia (síntesis)",
+    "author": "Luis Miguel",
+    "commercialUse": true,
+    "attributionRequired": false
+  }
+}

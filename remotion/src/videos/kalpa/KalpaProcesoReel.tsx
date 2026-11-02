@@ -1,10 +1,8 @@
 import { Audio } from "@remotion/media";
 import { linearTiming, TransitionSeries } from "@remotion/transitions";
-import { fade } from "@remotion/transitions/fade";
-import { slide } from "@remotion/transitions/slide";
 import React from "react";
-import { AbsoluteFill, interpolate, Sequence, staticFile } from "remotion";
-import { Flash } from "../../brand/elements";
+import { AbsoluteFill, Easing, interpolate, Sequence, staticFile } from "remotion";
+import { Bloom, blurZoom, Drift } from "../../brand/motion";
 import { C } from "../../brand/tokens";
 import { Sfx } from "../../sfx";
 import { S1Intro, S2Plano, S3Capas, S4Girar, S5Chispa, S6Energia, S7Probar, S8Firma } from "./scenes";
@@ -31,14 +29,14 @@ export const TIMING: typeof ESTIMATED = { ...ESTIMATED, ...VOICE };
 const HAS_VOICE = VOICE.voiceOffset !== undefined;
 
 const FPS = 30;
-const TR = 12; // frames de cada transición
+const TR = 20; // frames de cada transición (largas y solapadas)
 const f = (s: number) => Math.round(s * FPS);
 
 type Key = Exclude<keyof typeof ESTIMATED, "end">;
 const ORDER: Key[] = ["intro", "plano", "capas", "girar", "chispa", "energia", "probar", "firma"];
 
-// Frames de la transición que sale de cada escena (chispa → energía es casi un corte)
-const OUT: Partial<Record<Key, number>> = { chispa: 4 };
+// Frames de la transición que sale de cada escena (chispa → energía es más corta, con bloom)
+const OUT: Partial<Record<Key, number>> = { chispa: 14 };
 const outFrames = (k: Key) => (k === "firma" ? 0 : (OUT[k] ?? TR));
 
 // Cada escena dura hasta el inicio de la siguiente + la transición (que se solapa),
@@ -51,62 +49,54 @@ const sceneFrames = (k: Key) => {
 
 export const KALPA_PROCESO_REEL = { fps: FPS, width: 1080, height: 1920, durationInFrames: f(TIMING.end) };
 
-const timing = linearTiming({ durationInFrames: TR });
+const SCENES: Record<Key, React.ReactNode> = {
+  intro: <S1Intro />,
+  plano: <S2Plano />,
+  capas: <S3Capas closeAt={sceneFrames("capas") - 34} />,
+  girar: <S4Girar />,
+  chispa: <S5Chispa />,
+  energia: <S6Energia />,
+  probar: <S7Probar />,
+  firma: <S8Firma />,
+};
 
 export const KalpaProcesoReel: React.FC = () => {
   const s = (k: Key) => f(TIMING[k]);
+  // Centro de la transición que entra a la escena k
+  const mid = (k: Key) => s(k) + Math.round(outFrames(ORDER[ORDER.indexOf(k) - 1]) / 2);
   const music = (fr: number) => {
-    const fadeOut = interpolate(fr, [f(TIMING.end) - 45, f(TIMING.end)], [1, 0], {
+    const fadeOut = interpolate(fr, [f(TIMING.end) - 60, f(TIMING.end)], [1, 0], {
       extrapolateLeft: "clamp",
       extrapolateRight: "clamp",
     });
     // Con voz, la música baja para dejarla al frente
-    return (HAS_VOICE ? 0.2 : 0.42) * fadeOut;
+    return (HAS_VOICE ? 0.28 : 0.6) * fadeOut;
   };
 
   return (
     <AbsoluteFill style={{ background: C.black }}>
       <TransitionSeries>
-        <TransitionSeries.Sequence durationInFrames={sceneFrames("intro")}>
-          <S1Intro />
-        </TransitionSeries.Sequence>
-        {/* La lata "cae" y aparece la etiqueta acostada */}
-        <TransitionSeries.Transition presentation={slide({ direction: "from-bottom" })} timing={timing} />
-        <TransitionSeries.Sequence durationInFrames={sceneFrames("plano")}>
-          <S2Plano />
-        </TransitionSeries.Sequence>
-        <TransitionSeries.Transition presentation={fade()} timing={timing} />
-        <TransitionSeries.Sequence durationInFrames={sceneFrames("capas")}>
-          <S3Capas closeAt={sceneFrames("capas") - 30} />
-        </TransitionSeries.Sequence>
-        <TransitionSeries.Transition presentation={slide({ direction: "from-right" })} timing={timing} />
-        <TransitionSeries.Sequence durationInFrames={sceneFrames("girar")}>
-          <S4Girar />
-        </TransitionSeries.Sequence>
-        <TransitionSeries.Transition presentation={fade()} timing={timing} />
-        <TransitionSeries.Sequence durationInFrames={sceneFrames("chispa")}>
-          <S5Chispa />
-        </TransitionSeries.Sequence>
-        <TransitionSeries.Transition presentation={fade()} timing={linearTiming({ durationInFrames: outFrames("chispa") })} />
-        <TransitionSeries.Sequence durationInFrames={sceneFrames("energia")}>
-          <S6Energia />
-        </TransitionSeries.Sequence>
-        <TransitionSeries.Transition presentation={slide({ direction: "from-bottom" })} timing={timing} />
-        <TransitionSeries.Sequence durationInFrames={sceneFrames("probar")}>
-          <S7Probar />
-        </TransitionSeries.Sequence>
-        <TransitionSeries.Transition presentation={fade()} timing={timing} />
-        <TransitionSeries.Sequence durationInFrames={sceneFrames("firma")}>
-          <S8Firma />
-        </TransitionSeries.Sequence>
+        {ORDER.map((k, i) => (
+          <React.Fragment key={k}>
+            {i > 0 && (
+              <TransitionSeries.Transition
+                presentation={blurZoom()}
+                timing={linearTiming({ durationInFrames: outFrames(ORDER[i - 1]), easing: Easing.inOut(Easing.cubic) })}
+              />
+            )}
+            <TransitionSeries.Sequence durationInFrames={sceneFrames(k)} name={k}>
+              <Drift>{SCENES[k]}</Drift>
+            </TransitionSeries.Sequence>
+          </React.Fragment>
+        ))}
       </TransitionSeries>
 
-      {/* Destello azul en la "chispa" → "energía" */}
-      <Sequence from={s("energia") - 2} durationInFrames={12} name="Flash">
-        <Flash color={C.blueBright} frames={2} />
+      {/* Bloom de luz azul al pasar de "chispa" a "energía" */}
+      <Sequence from={mid("energia") - 8} durationInFrames={16} name="Bloom">
+        <Bloom duration={16} />
       </Sequence>
 
-      {/* Música (beat en 3.5–14 s y 15.5–20 s, impacto final en 23.5 s) */}
+      {/* Música propia: pad con reverb y beat a medio tiempo (tramos 3.5–14 s y 15.5–20 s) */}
       <Audio src={staticFile("music/kalpa-proceso-26s.wav")} volume={music} />
 
       {/* Voz en off (cuando existe public/voice/kalpa-vo.wav sincronizada) */}
@@ -120,31 +110,25 @@ export const KalpaProcesoReel: React.FC = () => {
         </Sequence>
       )}
 
-      {/* Efectos */}
-      <Sfx id="cinematic-whooshes/air-whoosh" at={s("intro") + 6} volume={0.5} />
-      <Sfx id="ui-sounds/pop" at={s("intro") + 2} volume={0.3} />
-      <Sfx id="transitions/swipe" at={s("plano") - 6} volume={0.6} />
-      <Sfx id="cinematic-whooshes/soft-swish" at={s("plano") + 6} volume={0.45} />
-      <Sfx id="transitions/flash-cut" at={s("capas") - 4} volume={0.35} />
-      <Sfx id="cinematic-whooshes/air-whoosh" at={s("capas") + 8} volume={0.55} />
-      <Sfx id="bass-impacts/sub-hit" at={s("girar") - 14} volume={0.55} />
-      <Sfx id="transitions/swipe" at={s("girar") - 6} volume={0.6} />
-      <Sfx id="cinematic-whooshes/soft-swish" at={s("girar") + 20} volume={0.35} />
-      <Sfx id="cinematic-whooshes/soft-swish" at={s("girar") + 55} volume={0.35} />
-      <Sfx id="risers/tone-riser" at={s("energia") - 60} volume={0.3} />
-      <Sfx id="ui-sounds/soft-click" at={s("chispa") + 4} volume={0.5} />
-      <Sfx id="transitions/flash-cut" at={s("energia") - 2} volume={0.6} />
-      <Sfx id="bass-impacts/deep-boom" at={s("energia")} volume={0.8} />
-      <Sfx id="product-sounds/electric-zap" at={s("energia")} volume={0.65} />
-      {[15, 30, 45, 60, 90].map((d) => (
-        <Sfx key={d} id="product-sounds/electric-zap" at={s("energia") + d} volume={0.35} />
-      ))}
-      <Sfx id="product-sounds/electric-crackle" at={s("energia") + 20} volume={0.25} />
-      <Sfx id="product-sounds/electric-crackle" at={s("energia") + 70} volume={0.2} />
-      <Sfx id="transitions/swipe" at={s("probar") - 6} volume={0.55} />
-      <Sfx id="product-sounds/can-open" at={s("probar") + 18} volume={0.5} />
-      <Sfx id="ui-sounds/pop" at={s("probar") + 40} volume={0.3} />
-      <Sfx id="bass-impacts/sub-hit" at={s("firma")} volume={0.7} />
+      {/* Efectos premium: pocos, graves y con reverb (skill motion-premium) */}
+      <Sfx id="ambient-sounds/night-air" at={0} volume={0.22} />
+      <Sfx id="bass-impacts/sub-swell" at={0} volume={0.45} />
+      <Sfx id="cinematic-whooshes/silk-sweep" at={0} volume={0.45} />
+      <Sfx id="cinematic-whooshes/deep-pass" at={mid("plano") - 17} volume={0.5} />
+      <Sfx id="transitions/air-transition" at={mid("capas") - 11} volume={0.45} />
+      <Sfx id="cinematic-whooshes/silk-sweep" at={s("capas") + 6} volume={0.3} />
+      <Sfx id="bass-impacts/soft-impact" at={s("capas") + sceneFrames("capas") - 34 + 12} volume={0.35} />
+      <Sfx id="cinematic-whooshes/silk-sweep" at={mid("girar") - 20} volume={0.5} />
+      <Sfx id="transitions/air-transition" at={mid("chispa") - 11} volume={0.35} />
+      <Sfx id="product-sounds/glint" at={s("chispa") + 6} volume={0.55} />
+      <Sfx id="risers/reverse-swell" at={mid("energia") - 48} volume={0.55} />
+      <Sfx id="bass-impacts/soft-impact" at={mid("energia")} volume={0.75} />
+      <Sfx id="product-sounds/electric-hum" at={mid("energia") + 2} volume={0.4} />
+      <Sfx id="cinematic-whooshes/deep-pass" at={mid("probar") - 17} volume={0.5} />
+      <Sfx id="bass-impacts/sub-swell" at={s("probar")} volume={0.35} />
+      <Sfx id="transitions/air-transition" at={mid("firma") - 11} volume={0.4} />
+      <Sfx id="bass-impacts/soft-impact" at={mid("firma")} volume={0.6} />
+      <Sfx id="product-sounds/glint" at={mid("firma") + 8} volume={0.3} />
     </AbsoluteFill>
   );
 };

@@ -1,0 +1,22 @@
+{
+  "id": "product-sounds/glint",
+  "name": "Glint",
+  "category": "product-sounds",
+  "tags": [
+    "glint",
+    "shimmer",
+    "spark",
+    "sparkle",
+    "premium"
+  ],
+  "durationSec": 2.2,
+  "file": "sfx/product-sounds/glint.wav",
+  "source": "generated",
+  "sourceUrl": "scripts/sfx-premium.mjs",
+  "license": {
+    "name": "Obra propia (síntesis)",
+    "author": "Luis Miguel",
+    "commercialUse": true,
+    "attributionRequired": false
+  }
+}

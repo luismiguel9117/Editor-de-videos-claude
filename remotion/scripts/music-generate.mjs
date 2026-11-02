@@ -1,179 +1,139 @@
 #!/usr/bin/env node
-// Sintetiza una pista musical propia (sin muestras de terceros) a 120 BPM,
-// con secciones que caen en los cortes del video.
+// Sintetiza una pista musical propia, sobria y "premium" (sin muestras de terceros):
+// pad cálido con reverb larga, sub bajo, beat a medio tiempo con bombo suave y
+// un pluck espaciado. 120 BPM de grilla (los cortes caen cada 0.5 s), sensación de 60.
 //
 // Uso: node scripts/music-generate.mjs <salida.wav> [duraciónSeg] [drop1] [drop2] [impacto]
-//   drop1 y drop2: tramos con beat completo, "inicio-fin" en segundos (p. ej. "3.5-14").
+//   drop1 y drop2: tramos con beat, "inicio-fin" en segundos (p. ej. "3.5-14").
 //   impacto: segundo del golpe final (p. ej. 23.5).
-//
-// Estructura por defecto (reel de 24 s): intro 0–3 · drop 3–10 · break 10–13 ·
-// drop 13–19 · outro 19–24 (impacto final en 21).
 
-import { writeFileSync } from "node:fs";
+import { biquad, buffer, normalize, reseed, reverb, rnd, soft, SR, writeWav } from "./dsp.mjs";
 
 const out = process.argv[2] ?? "music.wav";
 const DUR = Number(process.argv[3] ?? 24);
-const SR = 48000;
-const BPM = 120;
-const BEAT = 60 / BPM;
-const N = Math.round(DUR * SR);
-const L = new Float32Array(N);
-const R = new Float32Array(N);
-
 const range = (arg, def) => (arg ? arg.split("-").map(Number) : def);
 const SECTIONS = {
   drop1: range(process.argv[4], [3, 10]),
   drop2: range(process.argv[5], [13, 19]),
   outroHit: Number(process.argv[6] ?? 21),
 };
+const BEAT = 0.5;
+const N = Math.round(DUR * SR);
 const inRange = (t, [a, b]) => t >= a && t < b;
 const beatOn = (t) => inRange(t, SECTIONS.drop1) || inRange(t, SECTIONS.drop2);
-
-// Progresión en Re menor: Dm – Bb – F – C (un acorde por compás de 4 tiempos)
 const mtof = (m) => 440 * 2 ** ((m - 69) / 12);
+reseed(2024);
+
+// Re menor, voicings abiertos y cálidos: Dm9 – Bbmaj7 – Fmaj9 – C(add9), 2 compases cada uno
 const CHORDS = [
-  [50, 53, 57, 62], // Dm
-  [46, 50, 53, 58], // Bb
-  [53, 57, 60, 65], // F
-  [48, 52, 55, 60], // C
+  [38, 50, 57, 60, 64, 65],
+  [34, 50, 53, 57, 62, 65],
+  [41, 52, 57, 60, 64, 67],
+  [36, 52, 55, 60, 62, 67],
 ];
-const chordAt = (t) => CHORDS[Math.floor(t / (BEAT * 4)) % CHORDS.length];
+const BAR = BEAT * 4;
+const chordAt = (t) => CHORDS[Math.floor(t / (BAR * 2)) % CHORDS.length];
 
-// Pseudoaleatorio determinista
-let seed = 1234567;
-const rnd = () => ((seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff) * 2 - 1;
+const [pL, pR] = buffer(DUR); // pad + pluck (va a la reverb grande)
+const [dL, dR] = buffer(DUR); // batería y bajo (reverb corta)
 
-const add = (i, l, r = l) => {
-  if (i >= 0 && i < N) {
-    L[i] += l;
-    R[i] += r;
-  }
-};
-
-// 1) Pad: sierra con banda limitada (6 armónicos), 2 voces desafinadas, filtrado suave
-{
-  let lpL = 0, lpR = 0;
-  for (let i = 0; i < N; i++) {
-    const t = i / SR;
-    const chord = chordAt(t);
-    let sL = 0, sR = 0;
-    for (const m of chord) {
-      const f = mtof(m);
-      for (let h = 1; h <= 6; h++) {
-        sL += Math.sin(2 * Math.PI * f * 1.003 * h * t) / h;
-        sR += Math.sin(2 * Math.PI * f * 0.997 * h * t) / h;
-      }
-    }
-    // Filtro que se abre en los drops
-    const open = beatOn(t) ? 0.09 : 0.04;
-    lpL += (sL - lpL) * open;
-    lpR += (sR - lpR) * open;
-    // "Sidechain": el pad respira con el bombo
-    const phase = (t % BEAT) / BEAT;
-    const pump = beatOn(t) ? 0.35 + 0.65 * Math.min(1, phase * 2.2) : 1;
-    const fade = Math.min(1, t / 2) * Math.min(1, (DUR - t) / 2.5);
-    add(i, lpL * 0.03 * pump * fade, lpR * 0.03 * pump * fade);
-  }
-}
-
-// 2) Arpegio pluck en semicorcheas (intro, break y outro), con eco estéreo
-{
-  const step = BEAT / 4;
-  for (let k = 0; k * step < DUR; k++) {
-    const t0 = k * step;
-    if (inRange(t0, SECTIONS.drop1) && k % 2) continue; // menos denso en los drops
-    const chord = chordAt(t0);
-    const m = chord[[0, 2, 1, 3, 2, 1, 3, 2][k % 8]] + 12;
+// 1) Pad: senos + triángulo suave, dos voces desafinadas, envolvente lenta por acorde
+for (let i = 0; i < N; i++) {
+  const t = i / SR;
+  const chord = chordAt(t).slice(1);
+  const local = t % (BAR * 2);
+  const env = Math.min(1, local / 0.9) * (0.75 + 0.25 * Math.cos((2 * Math.PI * local) / (BAR * 2)));
+  let l = 0, r = 0;
+  for (const m of chord) {
     const f = mtof(m);
-    const amp = (beatOn(t0) ? 0.05 : 0.08) * Math.min(1, (DUR - t0) / 3);
-    const len = Math.round(0.35 * SR);
-    const s0 = Math.round(t0 * SR);
-    for (let j = 0; j < len; j++) {
-      const tt = j / SR;
-      const v = (Math.sin(2 * Math.PI * f * tt) + 0.3 * Math.sin(4 * Math.PI * f * tt)) * Math.exp(-tt * 11) * amp;
-      add(s0 + j, v * 0.9, v * 0.6);
-      // eco a 3/8 de tiempo, rebotando
-      add(s0 + j + Math.round(BEAT * 0.75 * SR), v * 0.25, v * 0.4);
-      add(s0 + j + Math.round(BEAT * 1.5 * SR), v * 0.15, v * 0.08);
-    }
+    const tri = (ph) => (2 / Math.PI) * Math.asin(Math.sin(ph));
+    l += 0.6 * Math.sin(2 * Math.PI * f * 1.002 * t) + 0.25 * tri(2 * Math.PI * f * 0.999 * t);
+    r += 0.6 * Math.sin(2 * Math.PI * f * 0.998 * t) + 0.25 * tri(2 * Math.PI * f * 1.001 * t);
+  }
+  const fade = Math.min(1, t / 2.5) * Math.min(1, (DUR - t) / 3);
+  const lift = beatOn(t) ? 1 : 0.8;
+  pL[i] += l * 0.018 * env * fade * lift;
+  pR[i] += r * 0.018 * env * fade * lift;
+}
+{
+  const f = (t) => (beatOn(t) ? 2600 : 1400);
+  const l = biquad(pL, "lowpass", f, 0.6), r = biquad(pR, "lowpass", f, 0.6);
+  pL.set(l); pR.set(r);
+}
+
+// 2) Pluck espaciado (felt): notas del acorde en 1 y 3, solo fuera de los drops y suave dentro
+for (let k = 0; k * BEAT < DUR; k += 2) {
+  const t0 = k * BEAT;
+  const chord = chordAt(t0);
+  const m = chord[[3, 4, 5, 4][(k / 2) % 4]] + 12;
+  const f = mtof(m);
+  const amp = (beatOn(t0) ? 0.035 : 0.06) * Math.min(1, (DUR - t0) / 3);
+  const s0 = Math.round(t0 * SR);
+  for (let j = 0; j < 1.6 * SR && s0 + j < N; j++) {
+    const tt = j / SR;
+    const e = Math.min(1, tt / 0.008) * Math.exp(-tt * 3.2);
+    const v = (Math.sin(2 * Math.PI * f * tt) + 0.18 * Math.sin(4 * Math.PI * f * tt) * Math.exp(-tt * 8)) * e * amp;
+    pL[s0 + j] += v * 0.8;
+    pR[s0 + j] += v;
   }
 }
 
-// 3) Bombo, bajo y hats en los drops
+// 3) Medio tiempo: bombo suave en 1 y 3, sub bajo, shaker muy bajo en corcheas
 for (let b = 0; b * BEAT < DUR; b++) {
   const t0 = b * BEAT;
   if (!beatOn(t0)) continue;
   const s0 = Math.round(t0 * SR);
-  // Bombo
-  for (let j = 0; j < 0.45 * SR; j++) {
-    const tt = j / SR;
-    const ph = 2 * Math.PI * (45 * tt + (110 / 28) * (1 - Math.exp(-tt * 28)));
-    add(s0 + j, Math.sin(ph) * Math.exp(-tt * 7) * 0.55);
-  }
-  // Bajo: raíz del acorde, en corcheas después del bombo
-  const root = mtof(chordAt(t0)[0] - 12);
-  for (let half = 0; half < 2; half++) {
-    const sb = s0 + Math.round((half * BEAT) / 2 * SR) + Math.round(0.02 * SR);
-    for (let j = 0; j < 0.22 * SR; j++) {
+  if (b % 2 === 0) {
+    for (let j = 0; j < 0.6 * SR && s0 + j < N; j++) {
       const tt = j / SR;
-      const v = (Math.sin(2 * Math.PI * root * tt) + 0.25 * Math.sin(4 * Math.PI * root * tt)) * Math.exp(-tt * 6) * 0.16;
-      add(sb + j, v);
+      const ph = 2 * Math.PI * (42 * tt + (70 / 22) * (1 - Math.exp(-tt * 22)));
+      const v = Math.sin(ph) * Math.exp(-tt * 6) * Math.min(1, tt / 0.003) * 0.5;
+      dL[s0 + j] += v; dR[s0 + j] += v;
+    }
+    const root = mtof(chordAt(t0)[0]);
+    for (let j = 0; j < 0.95 * SR && s0 + j < N; j++) {
+      const tt = j / SR;
+      const v = Math.sin(2 * Math.PI * root * tt) * Math.min(1, tt / 0.03) * Math.exp(-tt * 2.2) * 0.22;
+      dL[s0 + j] += v; dR[s0 + j] += v;
     }
   }
-  // Hat en el contratiempo y uno suave en semicorchea
-  for (const [off, a] of [[0.5, 0.06], [0.75, 0.025]]) {
-    const sh = s0 + Math.round(off * BEAT * SR);
-    let prev = 0;
-    for (let j = 0; j < 0.06 * SR; j++) {
-      const n = rnd();
-      const hp = n - prev; // paso alto
-      prev = n;
-      const v = hp * Math.exp(-(j / SR) * 70) * a;
-      add(sh + j, v * 0.8, v);
-    }
+  // Shaker: ruido filtrado, contratiempo con un poco de swing
+  const sh = s0 + Math.round((BEAT / 2 + 0.018) * SR);
+  for (let j = 0; j < 0.07 * SR && sh + j < N; j++) {
+    const v = rnd() * Math.exp(-(j / SR) * 55) * 0.03;
+    dL[sh + j] += v * 0.7; dR[sh + j] += v;
   }
 }
+{
+  // El shaker pasa por un paso alto para que sea aire, no "tss"
+  const l = biquad(dL, "highpass", 30), r = biquad(dR, "highpass", 30);
+  dL.set(l); dR.set(r);
+}
 
-// 4) Barridos de ruido hacia cada drop y un impacto final
+// 4) Swell hacia cada drop (aire filtrado que se abre) e impacto final con cola
 for (const target of [SECTIONS.drop1[0], SECTIONS.drop2[0]]) {
-  const len = 1.6;
-  const s0 = Math.round((target - len) * SR);
-  let lp = 0;
-  for (let j = 0; j < len * SR; j++) {
-    const p = j / (len * SR);
-    lp += (rnd() - lp) * (0.02 + p * 0.5);
-    add(s0 + j, lp * p * p * 0.12, lp * p * p * 0.12);
+  const len = 1.8, s0 = Math.round((target - len) * SR);
+  const n = new Float32Array(Math.round(len * SR)).map(() => rnd());
+  const x = biquad(n, "bandpass", (t) => 300 + 3200 * (t / len) ** 2, 0.8);
+  for (let j = 0; j < x.length; j++) {
+    const p = j / x.length;
+    pL[s0 + j] += x[j] * p * p * 0.05;
+    pR[s0 + j] += x[j] * p * p * 0.05;
   }
 }
 {
   const s0 = Math.round(SECTIONS.outroHit * SR);
-  for (let j = 0; j < 2.5 * SR; j++) {
+  for (let j = 0; j < 3 * SR && s0 + j < N; j++) {
     const tt = j / SR;
-    const v = Math.sin(2 * Math.PI * (40 * tt + (90 / 20) * (1 - Math.exp(-tt * 20)))) * Math.exp(-tt * 1.8) * 0.5;
-    add(s0 + j, v);
+    const v = Math.sin(2 * Math.PI * (34 * tt + (18 / 9) * (1 - Math.exp(-tt * 9)))) * Math.exp(-tt * 1.7) * 0.45;
+    dL[s0 + j] += v; dR[s0 + j] += v;
   }
 }
 
-// Normaliza a -3 dBFS y escribe WAV 16 bit estéreo
-let peak = 0;
-for (let i = 0; i < N; i++) peak = Math.max(peak, Math.abs(L[i]), Math.abs(R[i]));
-const gain = (10 ** (-3 / 20)) / peak;
-const buf = Buffer.alloc(44 + N * 4);
-buf.write("RIFF", 0);
-buf.writeUInt32LE(36 + N * 4, 4);
-buf.write("WAVEfmt ", 8);
-buf.writeUInt32LE(16, 16);
-buf.writeUInt16LE(1, 20);
-buf.writeUInt16LE(2, 22);
-buf.writeUInt32LE(SR, 24);
-buf.writeUInt32LE(SR * 4, 28);
-buf.writeUInt16LE(4, 32);
-buf.writeUInt16LE(16, 34);
-buf.write("data", 36);
-buf.writeUInt32LE(N * 4, 40);
-for (let i = 0; i < N; i++) {
-  buf.writeInt16LE(Math.round(Math.max(-1, Math.min(1, L[i] * gain)) * 32767), 44 + i * 4);
-  buf.writeInt16LE(Math.round(Math.max(-1, Math.min(1, R[i] * gain)) * 32767), 46 + i * 4);
-}
-writeFileSync(out, buf);
-console.log(`Música generada: ${out} (${DUR} s, ${BPM} BPM)`);
+// Mezcla: reverb grande al pad, corta a la batería, saturación suave
+const [rpL, rpR] = reverb(pL, pR, { wet: 0.55, room: 0.9, damp: 0.3, width: 1 });
+const [rdL, rdR] = reverb(dL, dR, { wet: 0.12, room: 0.6, damp: 0.5 });
+const L = soft(rpL.map((v, i) => v + rdL[i]), 1.2);
+const R = soft(rpR.map((v, i) => v + rdR[i]), 1.2);
+writeWav(out, ...normalize(L, R, -3));
+console.log(`Música generada: ${out} (${DUR} s)`);

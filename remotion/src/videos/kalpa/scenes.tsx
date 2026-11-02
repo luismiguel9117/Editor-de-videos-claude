@@ -10,6 +10,7 @@ import {
 } from "remotion";
 import "../../brand/fonts";
 import { BlueGlow, BlueWaves, Grain, Sparks } from "../../brand/elements";
+import { liftShadow, useFloat, useSettle } from "../../brand/motion";
 import { C, EASE_OUT, F } from "../../brand/tokens";
 
 // Reel "Proceso de trabajo" de KALPA. Cada escena: un fondo, el producto real integrado
@@ -30,7 +31,8 @@ const Line: React.FC<{ children: React.ReactNode; top?: number; left?: number; a
   align = "left",
   delay = 0,
 }) => {
-  const p = ease(useCurrentFrame(), delay, delay + 14);
+  const frame = useCurrentFrame();
+  const p = ease(frame, delay, delay + 14);
   return (
     <div
       style={{
@@ -46,6 +48,7 @@ const Line: React.FC<{ children: React.ReactNode; top?: number; left?: number; a
         color: C.ink,
         opacity: p,
         filter: `blur(${(1 - p) * 10}px)`,
+        transform: `translateX(${frame * 0.12 * (align === "left" ? 1 : -1)}px)`,
         maxWidth: 900,
         textAlign: align,
       }}
@@ -62,7 +65,10 @@ const Giant: React.FC<{
   top: number;
   serif?: boolean;
   style?: React.CSSProperties;
-}> = ({ children, size, top, serif = true, style }) => (
+}> = ({ children, size, top, serif = true, style }) => {
+  // La palabra deriva lentamente durante la escena (nunca queda quieta)
+  const dx = useCurrentFrame() * 0.28;
+  return (
   <div
     style={{
       position: "absolute",
@@ -78,11 +84,13 @@ const Giant: React.FC<{
       color: C.ink,
       whiteSpace: "nowrap",
       ...style,
+      transform: `translateX(${dx}px) ${style?.transform ?? ""}`,
     }}
   >
     {children}
   </div>
-);
+  );
+};
 
 const Night: React.FC<{ children: React.ReactNode; glow?: number }> = ({ children, glow = 1 }) => (
   <AbsoluteFill style={{ background: C.black }}>
@@ -103,7 +111,9 @@ const Blue: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 // 1 · "Un poco del trabajo que hice este mes para KALPA"
 export const S1Intro: React.FC = () => {
   const f = useCurrentFrame();
-  const can = ease(f, 6, 30);
+  const can = useSettle(4, 13); // sube y se asienta con un leve rebote
+  const fl = useFloat(0.4, 16, 3.8); // luego flota
+  const floatIn = ease(f, 18, 40);
   return (
     <Blue>
       <Line>
@@ -121,9 +131,9 @@ export const S1Intro: React.FC = () => {
           width: 1150,
           left: -35,
           top: 560,
-          transform: `translateY(${(1 - can) * 200}px) rotate(${-7 + (1 - can) * -6}deg)`,
-          opacity: can,
-          filter: CAN_SHADOW,
+          transform: `translate(${fl.x * floatIn}px, ${(1 - can) * 520 + fl.y * floatIn}px) rotate(${-7 + (1 - can) * -10 + fl.rot * floatIn}deg)`,
+          opacity: Math.min(1, can * 1.6),
+          filter: liftShadow(-fl.y * floatIn),
         }}
       />
     </Blue>
@@ -134,10 +144,11 @@ export const S1Intro: React.FC = () => {
 export const S2Plano: React.FC = () => {
   const f = useCurrentFrame();
   const lay = ease(f, 4, 34);
+  const fl = useFloat(1.3, 6, 4.2);
   return (
     <Night>
       <Line>Antes de tener forma, la etiqueta fue un diseño</Line>
-      <Giant size={460} top={520} style={{ transform: `scaleY(${1 - lay * 0.55})`, transformOrigin: "50% 100%" }}>
+      <Giant size={460} top={520} style={{ transform: `scaleY(${1 - lay * 0.55 - f * 0.0004})`, transformOrigin: "50% 100%" }}>
         plano
       </Giant>
       <div style={{ position: "absolute", left: -260, top: 1020, width: 1600, perspective: 1400 }}>
@@ -145,7 +156,7 @@ export const S2Plano: React.FC = () => {
           src={staticFile("kalpa/kalpa-label.png")}
           style={{
             width: 1600,
-            transform: `rotateX(${58 * lay}deg) rotateZ(${-6 * lay}deg)`,
+            transform: `translate(${-f * 0.6}px, ${fl.y - f * 0.15}px) rotateX(${58 * lay + fl.rot + f * 0.02}deg) rotateZ(${-6 * lay - f * 0.025 + fl.rot * 0.5}deg)`,
             transformOrigin: "50% 30%",
             borderRadius: 6,
             boxShadow: "0 60px 90px rgba(0,0,0,.7), 0 0 80px rgba(29,78,216,.35)",
@@ -189,7 +200,7 @@ export const S3Capas: React.FC<{ closeAt?: number }> = ({ closeAt = 95 }) => {
             width: 480,
             height: 960,
             transformStyle: "preserve-3d",
-            transform: `rotateY(${-34 * open}deg) rotateX(4deg)`,
+            transform: `rotateY(${-34 * open + Math.sin(f / 40) * 3}deg) rotateX(${4 + Math.sin(f / 55) * 1.5}deg)`,
           }}
         >
           {[
@@ -216,7 +227,14 @@ export const S3Capas: React.FC<{ closeAt?: number }> = ({ closeAt = 95 }) => {
               ),
             },
           ].map((l, i) => (
-            <div key={l.label} style={{ position: "absolute", inset: 0, transform: `translateZ(${(i - 1) * 380 * open}px)` }}>
+            <div
+              key={l.label}
+              style={{
+                position: "absolute",
+                inset: 0,
+                transform: `translateZ(${(i - 1) * 380 * open}px) translateY(${Math.sin((f / 30) * 1.75 + i * 1.1) * 12 * open}px)`,
+              }}
+            >
               {l.node}
               <div
                 style={{
@@ -244,6 +262,7 @@ export const S3Capas: React.FC<{ closeAt?: number }> = ({ closeAt = 95 }) => {
 // 4 · "Y la puse a girar" (carrusel real con fondo transparente)
 export const S4Girar: React.FC = () => {
   const f = useCurrentFrame();
+  const fl = useFloat(2.2, 10, 4);
   return (
     <Blue>
       <Sparks seed="girar" count={14} />
@@ -255,7 +274,7 @@ export const S4Girar: React.FC = () => {
           src={staticFile("footage/kallpa-alpha.webm")}
           transparent
           muted
-          style={{ width: 1060, height: 1325, marginTop: 470, filter: CAN_SHADOW }}
+          style={{ width: 1060, height: 1325, marginTop: 470, transform: `translateY(${fl.y}px)`, filter: liftShadow(-fl.y) }}
         />
       </AbsoluteFill>
       <Line>Y la puse a</Line>
@@ -298,6 +317,8 @@ const Spark: React.FC<{ x: number; y: number; size: number }> = ({ x, y, size })
 // 5 · "Pero le faltaba chispa…"
 export const S5Chispa: React.FC = () => {
   const f = useCurrentFrame();
+  const fl = useFloat(3.1, 12, 3.4);
+  const rise = useSettle(0, 16);
   return (
     <Night glow={0.7}>
       <Line>Pero le faltaba</Line>
@@ -312,8 +333,8 @@ export const S5Chispa: React.FC = () => {
           width: 1000,
           left: 260,
           top: 1180,
-          transform: "rotate(14deg)",
-          filter: `${CAN_SHADOW} brightness(.8)`,
+          transform: `translateY(${(1 - rise) * 260 + fl.y}px) rotate(${14 + fl.rot}deg)`,
+          filter: `${liftShadow(-fl.y)} brightness(.8)`,
         }}
       />
     </Night>
@@ -323,6 +344,7 @@ export const S5Chispa: React.FC = () => {
 // 6 · "Así que le di toda la energía" (lata eléctrica real con fondo transparente)
 export const S6Energia: React.FC = () => {
   const f = useCurrentFrame();
+  const fl = useFloat(4.4, 12, 3.8);
   return (
     <Night glow={1.3}>
       <Sparks seed="energia" count={24} />
@@ -334,7 +356,13 @@ export const S6Energia: React.FC = () => {
           src={staticFile("footage/electricidad-alpha.webm")}
           transparent
           muted
-          style={{ width: 2300, height: 2875, marginTop: 260, filter: "drop-shadow(0 0 40px rgba(29,78,216,.45))" }}
+          style={{
+            width: 2300,
+            height: 2875,
+            marginTop: 260,
+            transform: `translateY(${fl.y}px) rotate(${fl.rot * 0.6}deg)`,
+            filter: "drop-shadow(0 0 40px rgba(29,78,216,.45))",
+          }}
         />
       </AbsoluteFill>
       <Line top={200}>Así que le di toda la</Line>
@@ -345,7 +373,9 @@ export const S6Energia: React.FC = () => {
 // 7 · "¿Y tú, ya quieres probar una?"
 export const S7Probar: React.FC = () => {
   const f = useCurrentFrame();
-  const can = ease(f, 4, 28);
+  const can = useSettle(2, 13);
+  const fl = useFloat(5.2, 14, 3.6);
+  const floatIn = ease(f, 16, 36);
   return (
     <Blue>
       <Line>¿Y tú, ya quieres</Line>
@@ -359,8 +389,8 @@ export const S7Probar: React.FC = () => {
           width: 1250,
           left: -90,
           top: 660,
-          transform: `scale(${0.9 + can * 0.1}) rotate(${10 - can * 4}deg)`,
-          filter: CAN_SHADOW,
+          transform: `translate(${fl.x * floatIn}px, ${(1 - can) * 300 + fl.y * floatIn}px) scale(${0.86 + can * 0.14}) rotate(${12 - can * 6 + fl.rot * floatIn}deg)`,
+          filter: liftShadow(-fl.y * floatIn),
         }}
       />
       <Line top={1600} align="right">
@@ -385,6 +415,7 @@ export const S8Firma: React.FC = () => {
           color: C.ink,
           opacity: p,
           filter: `blur(${(1 - p) * 14}px)`,
+          transform: `translateY(${(1 - p) * 30 - f * 0.15}px) scale(${1 + f * 0.0005})`,
           lineHeight: 0.9,
         }}
       >

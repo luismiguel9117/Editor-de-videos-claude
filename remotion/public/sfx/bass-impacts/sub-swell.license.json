@@ -1,0 +1,22 @@
+{
+  "id": "bass-impacts/sub-swell",
+  "name": "Sub Swell",
+  "category": "bass-impacts",
+  "tags": [
+    "sub",
+    "swell",
+    "low",
+    "tension",
+    "premium"
+  ],
+  "durationSec": 2.2,
+  "file": "sfx/bass-impacts/sub-swell.wav",
+  "source": "generated",
+  "sourceUrl": "scripts/sfx-premium.mjs",
+  "license": {
+    "name": "Obra propia (síntesis)",
+    "author": "Luis Miguel",
+    "commercialUse": true,
+    "attributionRequired": false
+  }
+}

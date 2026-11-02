@@ -1,0 +1,22 @@
+{
+  "id": "product-sounds/electric-hum",
+  "name": "Electric Hum",
+  "category": "product-sounds",
+  "tags": [
+    "electric",
+    "hum",
+    "energy",
+    "current",
+    "premium"
+  ],
+  "durationSec": 4.5,
+  "file": "sfx/product-sounds/electric-hum.wav",
+  "source": "generated",
+  "sourceUrl": "scripts/sfx-premium.mjs",
+  "license": {
+    "name": "Obra propia (síntesis)",
+    "author": "Luis Miguel",
+    "commercialUse": true,
+    "attributionRequired": false
+  }
+}

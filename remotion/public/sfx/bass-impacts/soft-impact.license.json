@@ -1,0 +1,22 @@
+{
+  "id": "bass-impacts/soft-impact",
+  "name": "Soft Impact",
+  "category": "bass-impacts",
+  "tags": [
+    "impact",
+    "boom",
+    "soft",
+    "logo",
+    "premium"
+  ],
+  "durationSec": 3.2,
+  "file": "sfx/bass-impacts/soft-impact.wav",
+  "source": "generated",
+  "sourceUrl": "scripts/sfx-premium.mjs",
+  "license": {
+    "name": "Obra propia (síntesis)",
+    "author": "Luis Miguel",
+    "commercialUse": true,
+    "attributionRequired": false
+  }
+}

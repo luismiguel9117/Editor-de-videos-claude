@@ -1,0 +1,22 @@
+{
+  "id": "ambient-sounds/night-air",
+  "name": "Night Air",
+  "category": "ambient-sounds",
+  "tags": [
+    "ambient",
+    "room",
+    "air",
+    "bed",
+    "premium"
+  ],
+  "durationSec": 10,
+  "file": "sfx/ambient-sounds/night-air.wav",
+  "source": "generated",
+  "sourceUrl": "scripts/sfx-premium.mjs",
+  "license": {
+    "name": "Obra propia (síntesis)",
+    "author": "Luis Miguel",
+    "commercialUse": true,
+    "attributionRequired": false
+  }
+}

@@ -37,7 +37,8 @@
     "sfx:search": "node scripts/sfx-search.mjs",
     "sfx:generate": "node scripts/sfx-generate.mjs",
     "capture": "node scripts/capture-web.mjs",
-    "master": "node scripts/master.mjs"
+    "master": "node scripts/master.mjs",
+    "sfx:premium": "node scripts/sfx-premium.mjs"
   },
   "allowScripts": {
     "esbuild": false
