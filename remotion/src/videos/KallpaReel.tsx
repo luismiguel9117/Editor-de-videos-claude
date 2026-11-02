@@ -51,9 +51,9 @@ const CardScene: React.FC<{
     <AbsoluteFill style={{ background: C.surface }}>
       <EmberGlow intensity={1 + flare * 0.8} />
       <DashedGrid opacity={0.18} />
-      <Sparks seed={index} />
+      <Sparks seed={index} tone="ember" />
       <AbsoluteFill style={{ alignItems: "center", top: 270 }}>
-        <FootageCard src={src} width={880} height={1060} zoom={zoom} flare={flare} rotateY={rotateY} />
+        <FootageCard src={src} width={880} height={1060} zoom={zoom} flare={flare} rotateY={rotateY} tone="ember" />
       </AbsoluteFill>
       <div style={{ position: "absolute", top: 180, width: "100%", textAlign: "center", opacity: labelIn }}>
         <MonoLabel color={C.ember}>{index}</MonoLabel>

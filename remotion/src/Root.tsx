@@ -2,6 +2,7 @@ import { Composition, Folder } from "remotion";
 import { HelloWorld } from "./HelloWorld";
 import { SfxDemo } from "./SfxDemo";
 import { KALLPA_REEL, KallpaReel } from "./videos/KallpaReel";
+import { CarouselScene, KALLPA_PROCESO_CAROUSEL } from "./videos/KallpaProceso";
 import { Logo } from "./HelloWorld/Logo";
 import { Title } from "./HelloWorld/Title";
 
@@ -55,6 +56,7 @@ export const RemotionRoot: React.FC = () => {
 
       <Folder name="Reels">
         <Composition id="KallpaReel" component={KallpaReel} {...KALLPA_REEL} />
+        <Composition id="KallpaProceso-Carrusel" component={CarouselScene} {...KALLPA_PROCESO_CAROUSEL} />
       </Folder>
       <Composition
         id="SfxDemo"

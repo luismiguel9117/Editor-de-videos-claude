@@ -28,7 +28,11 @@ export const Grain: React.FC<{ opacity?: number }> = ({ opacity = 0.06 }) => {
 };
 
 /** Chispas que suben (como .em-spark). Deterministas: mismo render siempre. */
-export const Sparks: React.FC<{ count?: number; seed?: string }> = ({ count = 18, seed = "s" }) => {
+export const Sparks: React.FC<{ count?: number; seed?: string; tone?: "blue" | "ember" }> = ({
+  count = 18,
+  seed = "s",
+  tone = "blue",
+}) => {
   const frame = useCurrentFrame();
   const { width, height, fps } = useVideoConfig();
   return (
@@ -50,9 +54,12 @@ export const Sparks: React.FC<{ count?: number; seed?: string }> = ({ count = 18
               width: size,
               height: size,
               borderRadius: "50%",
-              background: C.ember,
+              background: tone === "blue" ? C.blueSoft : C.ember,
               opacity: op,
-              boxShadow: `0 0 10px ${C.emberHot}, 0 0 4px rgba(255,200,100,.8)`,
+              boxShadow:
+                tone === "blue"
+                  ? `0 0 10px ${C.blueGlow}, 0 0 4px rgba(200,215,255,.8)`
+                  : `0 0 10px ${C.emberHot}, 0 0 4px rgba(255,200,100,.8)`,
             }}
           />
         );
@@ -61,7 +68,54 @@ export const Sparks: React.FC<{ count?: number; seed?: string }> = ({ count = 18
   );
 };
 
-/** Luz de fondo difusa del mundo Brasa */
+/** Luz azul difusa sobre negro (mundo Noche) */
+export const BlueGlow: React.FC<{ intensity?: number }> = ({ intensity = 1 }) => {
+  const frame = useCurrentFrame();
+  const drift = Math.sin(frame / 40) * 4;
+  return (
+    <AbsoluteFill
+      style={{
+        background: `radial-gradient(65% 42% at ${50 + drift}% 50%, rgba(29,78,216,${0.42 * intensity}) 0%, rgba(5,16,42,${0.7}) 45%, rgba(0,0,0,0) 78%)`,
+        filter: "blur(30px)",
+      }}
+    />
+  );
+};
+
+/** Olas azules como el hero de luismiguel.pe (mundo Azul) */
+export const BlueWaves: React.FC = () => {
+  const frame = useCurrentFrame();
+  const t = frame / 30;
+  const blob = (x: number, y: number, w: number, h: number, color: string, phase: number) => (
+    <div
+      style={{
+        position: "absolute",
+        left: `${x + Math.sin(t * 0.35 + phase) * 6}%`,
+        top: `${y + Math.cos(t * 0.3 + phase) * 4}%`,
+        width: `${w}%`,
+        height: `${h}%`,
+        borderRadius: "50%",
+        background: color,
+        filter: "blur(90px)",
+        transform: `rotate(${-18 + Math.sin(t * 0.25 + phase) * 8}deg)`,
+      }}
+    />
+  );
+  return (
+    <AbsoluteFill style={{ background: C.navy, overflow: "hidden" }}>
+      {blob(-30, 10, 140, 70, C.blue, 0)}
+      {blob(10, 35, 90, 45, "#2a5cf0", 1.7)}
+      {blob(-20, -35, 110, 55, C.black, 3.1)}
+      {blob(40, 70, 110, 60, C.black, 4.4)}
+      {blob(55, 0, 70, 40, "#163fb8", 2.3)}
+      <AbsoluteFill
+        style={{ background: "linear-gradient(to top, #0a090f 0%, rgba(10,9,15,.6) 22%, transparent 45%)" }}
+      />
+    </AbsoluteFill>
+  );
+};
+
+/** Luz de fondo difusa del mundo Brasa (v1) */
 export const EmberGlow: React.FC<{ intensity?: number }> = ({ intensity = 1 }) => {
   const frame = useCurrentFrame();
   const drift = Math.sin(frame / 40) * 4;
