@@ -34,6 +34,10 @@ npm run render   # Renderizar a MP4
 GSAP se sirve desde `hyperframes/vendor/gsap.min.js` (en vez del CDN) para que el render
 funcione sin acceso a internet desde el navegador.
 
+## Estilo de edición
+
+Todos los videos siguen [`ESTILO-LUISMIGUEL.md`](ESTILO-LUISMIGUEL.md).
+
 ## Skills para Claude Code
 
 `.claude/skills/` incluye las skills oficiales de HyperFrames (`hyperframes`, `hyperframes-cli`,
