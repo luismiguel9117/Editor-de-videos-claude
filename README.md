@@ -38,3 +38,6 @@ funcione sin acceso a internet desde el navegador.
 
 `.claude/skills/` incluye las skills oficiales de HyperFrames (`hyperframes`, `hyperframes-cli`,
 `hyperframes-registry`, `media-use`), así Claude Code las carga al abrir este repositorio.
+
+También incluye las skills oficiales de Remotion (`remotion-*`), instaladas con
+`npx skills add remotion-dev/skills` y registradas en `skills-lock.json`.
