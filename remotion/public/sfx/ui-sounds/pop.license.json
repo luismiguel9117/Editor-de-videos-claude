@@ -1,0 +1,21 @@
+{
+  "id": "ui-sounds/pop",
+  "name": "Pop",
+  "category": "ui-sounds",
+  "tags": [
+    "ui",
+    "pop",
+    "appear",
+    "bubble"
+  ],
+  "durationSec": 0.18,
+  "file": "sfx/ui-sounds/pop.wav",
+  "source": "generated",
+  "sourceUrl": "scripts/sfx-generate.mjs",
+  "license": {
+    "name": "Obra propia (síntesis)",
+    "author": "Luis Miguel",
+    "commercialUse": true,
+    "attributionRequired": false
+  }
+}

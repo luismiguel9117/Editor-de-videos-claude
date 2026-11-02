@@ -1,0 +1,21 @@
+{
+  "id": "bass-impacts/deep-boom",
+  "name": "Deep Boom",
+  "category": "bass-impacts",
+  "tags": [
+    "impact",
+    "boom",
+    "cinematic",
+    "trailer"
+  ],
+  "durationSec": 2.8,
+  "file": "sfx/bass-impacts/deep-boom.wav",
+  "source": "generated",
+  "sourceUrl": "scripts/sfx-generate.mjs",
+  "license": {
+    "name": "Obra propia (síntesis)",
+    "author": "Luis Miguel",
+    "commercialUse": true,
+    "attributionRequired": false
+  }
+}

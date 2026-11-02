@@ -8,3 +8,5 @@ renders/
 .env
 # Artefactos locales de HyperFrames (checks, caché)
 hyperframes/.hyperframes/
+# Capturas de proyectos usadas por los videos (sí se versionan)
+!remotion/public/footage/*.mp4

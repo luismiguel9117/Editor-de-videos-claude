@@ -1,0 +1,21 @@
+{
+  "id": "product-sounds/can-open",
+  "name": "Can Open",
+  "category": "product-sounds",
+  "tags": [
+    "can",
+    "open",
+    "fizz",
+    "drink"
+  ],
+  "durationSec": 0.9,
+  "file": "sfx/product-sounds/can-open.wav",
+  "source": "generated",
+  "sourceUrl": "scripts/sfx-generate.mjs",
+  "license": {
+    "name": "Obra propia (síntesis)",
+    "author": "Luis Miguel",
+    "commercialUse": true,
+    "attributionRequired": false
+  }
+}

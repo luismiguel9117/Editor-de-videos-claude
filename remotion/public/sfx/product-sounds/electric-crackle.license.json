@@ -1,0 +1,21 @@
+{
+  "id": "product-sounds/electric-crackle",
+  "name": "Electric Crackle",
+  "category": "product-sounds",
+  "tags": [
+    "electric",
+    "crackle",
+    "buzz",
+    "energy"
+  ],
+  "durationSec": 1.2,
+  "file": "sfx/product-sounds/electric-crackle.wav",
+  "source": "generated",
+  "sourceUrl": "scripts/sfx-generate.mjs",
+  "license": {
+    "name": "Obra propia (síntesis)",
+    "author": "Luis Miguel",
+    "commercialUse": true,
+    "attributionRequired": false
+  }
+}

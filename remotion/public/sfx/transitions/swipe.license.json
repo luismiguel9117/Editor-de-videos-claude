@@ -1,0 +1,21 @@
+{
+  "id": "transitions/swipe",
+  "name": "Swipe",
+  "category": "transitions",
+  "tags": [
+    "transition",
+    "swipe",
+    "slide",
+    "wipe"
+  ],
+  "durationSec": 0.5,
+  "file": "sfx/transitions/swipe.wav",
+  "source": "generated",
+  "sourceUrl": "scripts/sfx-generate.mjs",
+  "license": {
+    "name": "Obra propia (síntesis)",
+    "author": "Luis Miguel",
+    "commercialUse": true,
+    "attributionRequired": false
+  }
+}

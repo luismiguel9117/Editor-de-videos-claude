@@ -1,0 +1,21 @@
+{
+  "id": "transitions/flash-cut",
+  "name": "Flash Cut",
+  "category": "transitions",
+  "tags": [
+    "transition",
+    "flash",
+    "cut",
+    "click"
+  ],
+  "durationSec": 0.18,
+  "file": "sfx/transitions/flash-cut.wav",
+  "source": "generated",
+  "sourceUrl": "scripts/sfx-generate.mjs",
+  "license": {
+    "name": "Obra propia (síntesis)",
+    "author": "Luis Miguel",
+    "commercialUse": true,
+    "attributionRequired": false
+  }
+}

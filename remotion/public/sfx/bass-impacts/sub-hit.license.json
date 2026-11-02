@@ -1,0 +1,22 @@
+{
+  "id": "bass-impacts/sub-hit",
+  "name": "Sub Hit",
+  "category": "bass-impacts",
+  "tags": [
+    "impact",
+    "boom",
+    "sub",
+    "logo",
+    "hit"
+  ],
+  "durationSec": 1.8,
+  "file": "sfx/bass-impacts/sub-hit.wav",
+  "source": "generated",
+  "sourceUrl": "scripts/sfx-generate.mjs",
+  "license": {
+    "name": "Obra propia (síntesis)",
+    "author": "Luis Miguel",
+    "commercialUse": true,
+    "attributionRequired": false
+  }
+}

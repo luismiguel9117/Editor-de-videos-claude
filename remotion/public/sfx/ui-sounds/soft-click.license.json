@@ -1,0 +1,21 @@
+{
+  "id": "ui-sounds/soft-click",
+  "name": "Soft Click",
+  "category": "ui-sounds",
+  "tags": [
+    "ui",
+    "click",
+    "tap",
+    "button"
+  ],
+  "durationSec": 0.12,
+  "file": "sfx/ui-sounds/soft-click.wav",
+  "source": "generated",
+  "sourceUrl": "scripts/sfx-generate.mjs",
+  "license": {
+    "name": "Obra propia (síntesis)",
+    "author": "Luis Miguel",
+    "commercialUse": true,
+    "attributionRequired": false
+  }
+}

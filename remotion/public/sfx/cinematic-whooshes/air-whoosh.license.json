@@ -1,0 +1,21 @@
+{
+  "id": "cinematic-whooshes/air-whoosh",
+  "name": "Air Whoosh",
+  "category": "cinematic-whooshes",
+  "tags": [
+    "whoosh",
+    "air",
+    "fast",
+    "text"
+  ],
+  "durationSec": 0.9,
+  "file": "sfx/cinematic-whooshes/air-whoosh.wav",
+  "source": "generated",
+  "sourceUrl": "scripts/sfx-generate.mjs",
+  "license": {
+    "name": "Obra propia (síntesis)",
+    "author": "Luis Miguel",
+    "commercialUse": true,
+    "attributionRequired": false
+  }
+}

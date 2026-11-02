@@ -10,8 +10,10 @@
   "private": true,
   "dependencies": {
     "@remotion/cli": "4.0.540",
+    "@remotion/fonts": "4.0.540",
     "@remotion/media": "4.0.540",
     "@remotion/sfx": "4.0.540",
+    "@remotion/transitions": "4.0.540",
     "@remotion/zod-types": "4.0.540",
     "react": "19.3.1",
     "react-dom": "19.3.1",
@@ -32,7 +34,10 @@
     "upgrade": "remotion upgrade",
     "lint": "eslint src && tsc",
     "sfx:import": "node scripts/sfx-import.mjs",
-    "sfx:search": "node scripts/sfx-search.mjs"
+    "sfx:search": "node scripts/sfx-search.mjs",
+    "sfx:generate": "node scripts/sfx-generate.mjs",
+    "capture": "node scripts/capture-web.mjs",
+    "master": "node scripts/master.mjs"
   },
   "allowScripts": {
     "esbuild": false

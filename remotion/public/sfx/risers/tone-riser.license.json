@@ -1,0 +1,21 @@
+{
+  "id": "risers/tone-riser",
+  "name": "Tone Riser",
+  "category": "risers",
+  "tags": [
+    "riser",
+    "build",
+    "tone",
+    "pitch"
+  ],
+  "durationSec": 2,
+  "file": "sfx/risers/tone-riser.wav",
+  "source": "generated",
+  "sourceUrl": "scripts/sfx-generate.mjs",
+  "license": {
+    "name": "Obra propia (síntesis)",
+    "author": "Luis Miguel",
+    "commercialUse": true,
+    "attributionRequired": false
+  }
+}

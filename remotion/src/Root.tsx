@@ -1,6 +1,7 @@
 import { Composition, Folder } from "remotion";
 import { HelloWorld } from "./HelloWorld";
 import { SfxDemo } from "./SfxDemo";
+import { KALLPA_REEL, KallpaReel } from "./videos/KallpaReel";
 import { Logo } from "./HelloWorld/Logo";
 import { Title } from "./HelloWorld/Title";
 
@@ -52,6 +53,9 @@ export const RemotionRoot: React.FC = () => {
         }}
       />
 
+      <Folder name="Reels">
+        <Composition id="KallpaReel" component={KallpaReel} {...KALLPA_REEL} />
+      </Folder>
       <Composition
         id="SfxDemo"
         component={SfxDemo}

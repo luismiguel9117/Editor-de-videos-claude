@@ -1,0 +1,22 @@
+{
+  "id": "ambient-sounds/pulse-bed-110-bpm",
+  "name": "Pulse Bed 110 BPM",
+  "category": "ambient-sounds",
+  "tags": [
+    "music",
+    "bed",
+    "pulse",
+    "beat",
+    "minimal"
+  ],
+  "durationSec": 24,
+  "file": "sfx/ambient-sounds/pulse-bed-110-bpm.wav",
+  "source": "generated",
+  "sourceUrl": "scripts/sfx-generate.mjs",
+  "license": {
+    "name": "Obra propia (síntesis)",
+    "author": "Luis Miguel",
+    "commercialUse": true,
+    "attributionRequired": false
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "id": "risers/noise-riser",
+  "name": "Noise Riser",
+  "category": "risers",
+  "tags": [
+    "riser",
+    "build",
+    "tension",
+    "sweep"
+  ],
+  "durationSec": 2,
+  "file": "sfx/risers/noise-riser.wav",
+  "source": "generated",
+  "sourceUrl": "scripts/sfx-generate.mjs",
+  "license": {
+    "name": "Obra propia (síntesis)",
+    "author": "Luis Miguel",
+    "commercialUse": true,
+    "attributionRequired": false
+  }
+}

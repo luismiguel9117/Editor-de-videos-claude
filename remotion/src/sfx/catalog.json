@@ -1,4 +1,324 @@
 {
   "version": 1,
-  "sounds": []
+  "sounds": [
+    {
+      "id": "ambient-sounds/dark-drone",
+      "name": "Dark Drone",
+      "category": "ambient-sounds",
+      "tags": [
+        "ambient",
+        "drone",
+        "pad",
+        "dark",
+        "bed"
+      ],
+      "durationSec": 12,
+      "file": "sfx/ambient-sounds/dark-drone.wav",
+      "source": "generated",
+      "sourceUrl": "scripts/sfx-generate.mjs",
+      "license": {
+        "name": "Obra propia (síntesis)",
+        "author": "Luis Miguel",
+        "commercialUse": true,
+        "attributionRequired": false
+      }
+    },
+    {
+      "id": "ambient-sounds/pulse-bed-110-bpm",
+      "name": "Pulse Bed 110 BPM",
+      "category": "ambient-sounds",
+      "tags": [
+        "music",
+        "bed",
+        "pulse",
+        "beat",
+        "minimal"
+      ],
+      "durationSec": 24,
+      "file": "sfx/ambient-sounds/pulse-bed-110-bpm.wav",
+      "source": "generated",
+      "sourceUrl": "scripts/sfx-generate.mjs",
+      "license": {
+        "name": "Obra propia (síntesis)",
+        "author": "Luis Miguel",
+        "commercialUse": true,
+        "attributionRequired": false
+      }
+    },
+    {
+      "id": "bass-impacts/deep-boom",
+      "name": "Deep Boom",
+      "category": "bass-impacts",
+      "tags": [
+        "impact",
+        "boom",
+        "cinematic",
+        "trailer"
+      ],
+      "durationSec": 2.8,
+      "file": "sfx/bass-impacts/deep-boom.wav",
+      "source": "generated",
+      "sourceUrl": "scripts/sfx-generate.mjs",
+      "license": {
+        "name": "Obra propia (síntesis)",
+        "author": "Luis Miguel",
+        "commercialUse": true,
+        "attributionRequired": false
+      }
+    },
+    {
+      "id": "bass-impacts/sub-hit",
+      "name": "Sub Hit",
+      "category": "bass-impacts",
+      "tags": [
+        "impact",
+        "boom",
+        "sub",
+        "logo",
+        "hit"
+      ],
+      "durationSec": 1.8,
+      "file": "sfx/bass-impacts/sub-hit.wav",
+      "source": "generated",
+      "sourceUrl": "scripts/sfx-generate.mjs",
+      "license": {
+        "name": "Obra propia (síntesis)",
+        "author": "Luis Miguel",
+        "commercialUse": true,
+        "attributionRequired": false
+      }
+    },
+    {
+      "id": "cinematic-whooshes/air-whoosh",
+      "name": "Air Whoosh",
+      "category": "cinematic-whooshes",
+      "tags": [
+        "whoosh",
+        "air",
+        "fast",
+        "text"
+      ],
+      "durationSec": 0.9,
+      "file": "sfx/cinematic-whooshes/air-whoosh.wav",
+      "source": "generated",
+      "sourceUrl": "scripts/sfx-generate.mjs",
+      "license": {
+        "name": "Obra propia (síntesis)",
+        "author": "Luis Miguel",
+        "commercialUse": true,
+        "attributionRequired": false
+      }
+    },
+    {
+      "id": "cinematic-whooshes/soft-swish",
+      "name": "Soft Swish",
+      "category": "cinematic-whooshes",
+      "tags": [
+        "whoosh",
+        "soft",
+        "word",
+        "text"
+      ],
+      "durationSec": 0.45,
+      "file": "sfx/cinematic-whooshes/soft-swish.wav",
+      "source": "generated",
+      "sourceUrl": "scripts/sfx-generate.mjs",
+      "license": {
+        "name": "Obra propia (síntesis)",
+        "author": "Luis Miguel",
+        "commercialUse": true,
+        "attributionRequired": false
+      }
+    },
+    {
+      "id": "product-sounds/can-open",
+      "name": "Can Open",
+      "category": "product-sounds",
+      "tags": [
+        "can",
+        "open",
+        "fizz",
+        "drink"
+      ],
+      "durationSec": 0.9,
+      "file": "sfx/product-sounds/can-open.wav",
+      "source": "generated",
+      "sourceUrl": "scripts/sfx-generate.mjs",
+      "license": {
+        "name": "Obra propia (síntesis)",
+        "author": "Luis Miguel",
+        "commercialUse": true,
+        "attributionRequired": false
+      }
+    },
+    {
+      "id": "product-sounds/electric-crackle",
+      "name": "Electric Crackle",
+      "category": "product-sounds",
+      "tags": [
+        "electric",
+        "crackle",
+        "buzz",
+        "energy"
+      ],
+      "durationSec": 1.2,
+      "file": "sfx/product-sounds/electric-crackle.wav",
+      "source": "generated",
+      "sourceUrl": "scripts/sfx-generate.mjs",
+      "license": {
+        "name": "Obra propia (síntesis)",
+        "author": "Luis Miguel",
+        "commercialUse": true,
+        "attributionRequired": false
+      }
+    },
+    {
+      "id": "product-sounds/electric-zap",
+      "name": "Electric Zap",
+      "category": "product-sounds",
+      "tags": [
+        "electric",
+        "zap",
+        "spark",
+        "energy",
+        "can"
+      ],
+      "durationSec": 0.35,
+      "file": "sfx/product-sounds/electric-zap.wav",
+      "source": "generated",
+      "sourceUrl": "scripts/sfx-generate.mjs",
+      "license": {
+        "name": "Obra propia (síntesis)",
+        "author": "Luis Miguel",
+        "commercialUse": true,
+        "attributionRequired": false
+      }
+    },
+    {
+      "id": "risers/noise-riser",
+      "name": "Noise Riser",
+      "category": "risers",
+      "tags": [
+        "riser",
+        "build",
+        "tension",
+        "sweep"
+      ],
+      "durationSec": 2,
+      "file": "sfx/risers/noise-riser.wav",
+      "source": "generated",
+      "sourceUrl": "scripts/sfx-generate.mjs",
+      "license": {
+        "name": "Obra propia (síntesis)",
+        "author": "Luis Miguel",
+        "commercialUse": true,
+        "attributionRequired": false
+      }
+    },
+    {
+      "id": "risers/tone-riser",
+      "name": "Tone Riser",
+      "category": "risers",
+      "tags": [
+        "riser",
+        "build",
+        "tone",
+        "pitch"
+      ],
+      "durationSec": 2,
+      "file": "sfx/risers/tone-riser.wav",
+      "source": "generated",
+      "sourceUrl": "scripts/sfx-generate.mjs",
+      "license": {
+        "name": "Obra propia (síntesis)",
+        "author": "Luis Miguel",
+        "commercialUse": true,
+        "attributionRequired": false
+      }
+    },
+    {
+      "id": "transitions/flash-cut",
+      "name": "Flash Cut",
+      "category": "transitions",
+      "tags": [
+        "transition",
+        "flash",
+        "cut",
+        "click"
+      ],
+      "durationSec": 0.18,
+      "file": "sfx/transitions/flash-cut.wav",
+      "source": "generated",
+      "sourceUrl": "scripts/sfx-generate.mjs",
+      "license": {
+        "name": "Obra propia (síntesis)",
+        "author": "Luis Miguel",
+        "commercialUse": true,
+        "attributionRequired": false
+      }
+    },
+    {
+      "id": "transitions/swipe",
+      "name": "Swipe",
+      "category": "transitions",
+      "tags": [
+        "transition",
+        "swipe",
+        "slide",
+        "wipe"
+      ],
+      "durationSec": 0.5,
+      "file": "sfx/transitions/swipe.wav",
+      "source": "generated",
+      "sourceUrl": "scripts/sfx-generate.mjs",
+      "license": {
+        "name": "Obra propia (síntesis)",
+        "author": "Luis Miguel",
+        "commercialUse": true,
+        "attributionRequired": false
+      }
+    },
+    {
+      "id": "ui-sounds/pop",
+      "name": "Pop",
+      "category": "ui-sounds",
+      "tags": [
+        "ui",
+        "pop",
+        "appear",
+        "bubble"
+      ],
+      "durationSec": 0.18,
+      "file": "sfx/ui-sounds/pop.wav",
+      "source": "generated",
+      "sourceUrl": "scripts/sfx-generate.mjs",
+      "license": {
+        "name": "Obra propia (síntesis)",
+        "author": "Luis Miguel",
+        "commercialUse": true,
+        "attributionRequired": false
+      }
+    },
+    {
+      "id": "ui-sounds/soft-click",
+      "name": "Soft Click",
+      "category": "ui-sounds",
+      "tags": [
+        "ui",
+        "click",
+        "tap",
+        "button"
+      ],
+      "durationSec": 0.12,
+      "file": "sfx/ui-sounds/soft-click.wav",
+      "source": "generated",
+      "sourceUrl": "scripts/sfx-generate.mjs",
+      "license": {
+        "name": "Obra propia (síntesis)",
+        "author": "Luis Miguel",
+        "commercialUse": true,
+        "attributionRequired": false
+      }
+    }
+  ]
 }

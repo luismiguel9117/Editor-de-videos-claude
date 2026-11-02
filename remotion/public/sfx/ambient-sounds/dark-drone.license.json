@@ -1,0 +1,22 @@
+{
+  "id": "ambient-sounds/dark-drone",
+  "name": "Dark Drone",
+  "category": "ambient-sounds",
+  "tags": [
+    "ambient",
+    "drone",
+    "pad",
+    "dark",
+    "bed"
+  ],
+  "durationSec": 12,
+  "file": "sfx/ambient-sounds/dark-drone.wav",
+  "source": "generated",
+  "sourceUrl": "scripts/sfx-generate.mjs",
+  "license": {
+    "name": "Obra propia (síntesis)",
+    "author": "Luis Miguel",
+    "commercialUse": true,
+    "attributionRequired": false
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "id": "cinematic-whooshes/soft-swish",
+  "name": "Soft Swish",
+  "category": "cinematic-whooshes",
+  "tags": [
+    "whoosh",
+    "soft",
+    "word",
+    "text"
+  ],
+  "durationSec": 0.45,
+  "file": "sfx/cinematic-whooshes/soft-swish.wav",
+  "source": "generated",
+  "sourceUrl": "scripts/sfx-generate.mjs",
+  "license": {
+    "name": "Obra propia (síntesis)",
+    "author": "Luis Miguel",
+    "commercialUse": true,
+    "attributionRequired": false
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "id": "product-sounds/electric-zap",
+  "name": "Electric Zap",
+  "category": "product-sounds",
+  "tags": [
+    "electric",
+    "zap",
+    "spark",
+    "energy",
+    "can"
+  ],
+  "durationSec": 0.35,
+  "file": "sfx/product-sounds/electric-zap.wav",
+  "source": "generated",
+  "sourceUrl": "scripts/sfx-generate.mjs",
+  "license": {
+    "name": "Obra propia (síntesis)",
+    "author": "Luis Miguel",
+    "commercialUse": true,
+    "attributionRequired": false
+  }
+}
