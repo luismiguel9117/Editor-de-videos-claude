@@ -18,6 +18,23 @@ Lo que lo arruina: sonidos de juguete y saltos bruscos entre escenas.
   carrito, parallax) y dejarla verse completa, grande y centrada; la cámara solo empuja lento.
 - Mucho espacio negativo; tipografía grande y limpia; máximo un acento de color por beat.
 
+## Carrusel de pantallas (ver referencias/05-carrusel-cilindrico.md)
+- Anillo **cóncavo** (cámara dentro), páginas grandes; se construye en fases: 1 página de frente
+  → el anillo se abre → giro lateral continuo; lados oscuros y desenfocados.
+- Nunca un cilindro chico visto desde fuera que solo gira.
+
+## Unidad gráfica
+- Nunca copiar recursos visuales propios de una referencia (p. ej. el horizonte brillante de
+  NeuraFlow). Se toma la **técnica**, y el recurso se crea con la identidad del cliente
+  (en KALPA: patrón andino de rombos, rojo del hero, granos de café, dorado).
+- Textos de apertura: mínimo 2 s legibles en pantalla antes de cualquier transición.
+- Ningún elemento decorativo puede tapar texto.
+
+## Dispositivos
+- Celulares y laptops: 3D real con materiales (metal, vidrio, reflejos) o mockups profesionales;
+  los dibujados en CSS plano se ven falsos. Implementado: `remotion/src/videos/kalpaweb/Phone3D.tsx`
+  (Three.js + pantalla proyectada en DOM con matrix3d). Render con `--gl=swangle`.
+
 ## Antes de animar
 1. Propósito del video y qué elementos reales del producto usar (y cuáles omitir).
 2. Frames estáticos aprobados primero; movimiento después.

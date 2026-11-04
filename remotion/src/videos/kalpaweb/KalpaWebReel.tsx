@@ -11,15 +11,15 @@ import voiceTiming from "./voice-timing.json";
 // con voz, se reemplaza por voice-timing.json y todo se recalcula.
 const ESTIMATED = {
   busca: 0,
-  revela: 2.8,
-  hero: 5.8,
-  tienda: 9.3,
-  origen: 12.3,
-  movil: 16.3,
-  paginas: 19.3,
-  shopify: 22.8,
-  firma: 26,
-  end: 29.5,
+  revela: 4.2,
+  hero: 7.2,
+  tienda: 10.7,
+  origen: 13.7,
+  movil: 17.7,
+  paginas: 20.7,
+  shopify: 24.4,
+  firma: 27.6,
+  end: 31,
 };
 const VOICE = voiceTiming as Partial<typeof ESTIMATED> & { voiceOffset?: number };
 export const TIMING: typeof ESTIMATED = { ...ESTIMATED, ...VOICE };
@@ -83,7 +83,7 @@ export const KalpaWebReel: React.FC = () => {
         <Bloom duration={18} />
       </Sequence>
 
-      <Audio src={staticFile("music/kalpa-web-29s.wav")} volume={music} />
+      <Audio src={staticFile("music/kalpa-web-31s.wav")} volume={music} />
       {HAS_VOICE && (
         <Sequence from={Math.max(0, f(VOICE.voiceOffset ?? 0))} name="Voz">
           <Audio src={staticFile("voice/kalpa-web-vo.wav")} trimBefore={Math.max(0, -f(VOICE.voiceOffset ?? 0))} />
@@ -94,6 +94,7 @@ export const KalpaWebReel: React.FC = () => {
       <Sfx id="ambient-sounds/night-air" at={0} volume={0.2} />
       <Sfx id="product-sounds/glint" at={2} volume={0.45} />
       <Sfx id="transitions/air-transition" at={12} volume={0.35} />
+      <Sfx id="transitions/air-transition" at={100} volume={0.3} />
       <Sfx id="risers/reverse-swell" at={s("revela") - 48} volume={0.5} />
       <Sfx id="bass-impacts/soft-impact" at={s("revela")} volume={0.7} />
       <Sfx id="cinematic-whooshes/silk-sweep" at={mid("hero") - 20} volume={0.45} />

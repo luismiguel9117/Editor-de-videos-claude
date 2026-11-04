@@ -4,7 +4,8 @@ import { AbsoluteFill, Easing, interpolate, spring, staticFile, useCurrentFrame,
 import { useFloat } from "../../brand/motion";
 import "../../brand/fonts";
 import { BlueWaves, Grain } from "../../brand/elements";
-import { Cylinder, GlassChip, KalpaLight, Macro, Phone, Piece, SearchBar } from "./devices";
+import { ConcaveRing, GlassChip, KalpaWorld, Macro, Piece, SearchBar } from "./devices";
+import { Phones3D } from "./Phone3D";
 import { C as LM, F as LMF } from "../../brand/tokens";
 
 // Presentación de la web de KALPA (kalpa.pe). Colores y tipografía de KALPA (theme.css del repo
@@ -120,9 +121,10 @@ const Stack: React.FC<{ lines: { t: string; gold?: boolean; outline?: boolean }[
   </>
 );
 
+// Fondo de cada escena: universo gráfico KALPA (patrón andino, rojo del hero, granos, chispas)
 const Stage: React.FC<{ children: React.ReactNode; horizon?: number; beam?: number }> = ({ children, horizon = 1, beam = 1 }) => (
   <AbsoluteFill style={{ background: "#07080a", overflow: "hidden" }}>
-    <KalpaLight horizon={horizon} beam={beam} />
+    <KalpaWorld warm={beam} beans={horizon > 0 ? 1 : 0.6} />
     {children}
     <Grain opacity={0.06} />
   </AbsoluteFill>
@@ -133,16 +135,16 @@ export const W1Busca: React.FC = () => {
   const f = useCurrentFrame();
   const pop = useSpring(0, 10);
   const morph = ease(f, 12, 30);
-  const typed = Math.max(0, Math.min(8, Math.floor((f - 32) / 3.2)));
-  const press = interpolate(f, [62, 65, 70], [0, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const flat = ease(f, 70, 84);
+  const typed = Math.max(0, Math.min(8, Math.floor((f - 30) / 4.5)));
+  const press = interpolate(f, [100, 103, 108], [0, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const flat = ease(f, 110, 124);
   return (
     <Stage horizon={0.7}>
       <div style={{ position: "absolute", inset: 0, transform: `scale(${0.4 + pop * 0.6})`, transformOrigin: "540px 616px", opacity: Math.min(1, pop * 2) }}>
         <SearchBar text="kalpa.pe" typed={typed} w={760} x={160} y={560} color={K.gold} morph={morph} flat={flat} press={press} />
       </div>
       <div style={{ opacity: 1 - flat }}>
-        <Small x={0} y={740} delay={34}>
+        <Small x={0} y={740} delay={20} size={46} color={K.text}>
           <span style={{ display: "block", width: 1080, textAlign: "center" }}>Este mes diseñé una nueva web.</span>
         </Small>
       </div>
@@ -216,12 +218,12 @@ export const W3Hero: React.FC = () => {
         style={{ opacity: Math.min(1, enter * 1.5) }}
       />
       <div style={{ position: "absolute", inset: 0, transform: `translate(${(1 - c1) * -80}px, ${fa.y}px) scale(${0.8 + c1 * 0.2})`, opacity: c1, transformOrigin: "200px 1040px" }}>
-        <GlassChip x={40} y={980} label="Cafeína natural" value="280 mg" />
+        <GlassChip x={60} y={940} label="Cafeína natural" value="280 mg" />
       </div>
       <div style={{ position: "absolute", inset: 0, transform: `translate(${(1 - c2) * 80}px, ${fb.y}px) scale(${0.8 + c2 * 0.2})`, opacity: c2, transformOrigin: "850px 390px" }}>
         <GlassChip x={700} y={330} label="Macerado" value="24 h" />
       </div>
-      <Stack lines={[{ t: "Con" }, { t: "energía.", gold: true }]} x={80} y={1060} size={120} align="right" delay={14} />
+      <Stack lines={[{ t: "Con" }, { t: "energía.", gold: true }]} x={80} y={1010} size={130} align="right" delay={14} />
     </Stage>
   );
 };
@@ -263,36 +265,28 @@ export const W5Origen: React.FC = () => {
   );
 };
 
-// 6 · Celular: tres teléfonos entran escalonados y flotan (ref. 1)
-const FloatingPhone: React.FC<{ i: number; x: number; y: number; w: number; rz: number; ry: number; src: string }> = ({ i, x, y, w, rz, ry, src }) => {
-  const e = useSpring(i * 6, 14);
-  const fl = useFloat(i * 1.7, 12, 3.6);
-  const f = useCurrentFrame();
-  return (
-    <div style={{ position: "absolute", inset: 0, transform: `translateY(${(1 - e) * 500 + fl.y}px)`, opacity: Math.min(1, e * 2) }}>
-      <Phone x={x} y={y} w={w} rz={rz + (1 - e) * 12 + fl.rot} ry={ry - f * 0.05} src={src} />
-    </div>
-  );
-};
+// 6 · Celular: tres celulares en 3D real (Three.js) entran escalonados y flotan (ref. 1)
 export const W6Movil: React.FC = () => (
   <Stage>
     <Stack lines={[{ t: "Igual de bien" }, { t: "en tu celular.", gold: true }]} y={90} size={110} delay={8} />
-    <FloatingPhone i={0} x={40} y={470} w={300} rz={-8} ry={18} src={W("m-intro")} />
-    <FloatingPhone i={1} x={390} y={420} w={310} rz={-4} ry={10} src={W("m-products")} />
-    <FloatingPhone i={2} x={740} y={470} w={300} rz={0} ry={2} src={W("m-origin")} />
+    <div style={{ position: "absolute", left: 0, top: 330, width: 1080, height: 1020 }}>
+      <Phones3D screens={[W("m-intro"), W("m-products"), W("m-origin")]} width={1080} height={1020} />
+    </div>
   </Stage>
 );
 
-// 7 · 5 páginas en un carrusel cilíndrico que gira (ref. 2 + 3)
+// 7 · 5 páginas: una página de frente → se abre el anillo cóncavo → giro continuo (ref. 3)
 export const W7Paginas: React.FC = () => {
   const f = useCurrentFrame();
   const enter = useSpring(0, 18);
-  const pages = ["page-producto", "page-productos", "d-hero-1", "page-nosotros", "page-promociones"].map(W);
+  const open = ease(f, 16, 44);
+  const rot = interpolate(f, [30, 120], [0, 2.6], { extrapolateLeft: "clamp", extrapolateRight: "extend" });
+  const pages = ["d-hero-1", "page-producto", "page-productos", "page-nosotros", "page-promociones"].map(W);
   return (
-    <Stage>
+    <Stage horizon={0}>
       <Stack lines={[{ t: "5 páginas.", gold: true }, { t: "1 sistema." }]} y={100} size={140} delay={8} />
-      <div style={{ position: "absolute", inset: 0, transform: `scale(${0.85 + enter * 0.15})`, opacity: enter, transformOrigin: "540px 830px" }}>
-        <Cylinder pages={pages} w={600} h={375} y={640} angle={150 - ease(f, 0, 110) * 150} step={46} />
+      <div style={{ position: "absolute", inset: 0, transform: `scale(${1.25 - open * 0.25}) translateY(${(1 - enter) * 120}px)`, opacity: enter, transformOrigin: "540px 870px" }}>
+        <ConcaveRing pages={pages} w={820} h={512} y={620} step={34} R={1150} open={open} rot={rot} />
       </div>
     </Stage>
   );

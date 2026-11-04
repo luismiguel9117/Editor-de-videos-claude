@@ -1,5 +1,7 @@
 import React from "react";
-import { AbsoluteFill, Img, OffthreadVideo, useCurrentFrame } from "remotion";
+import { AbsoluteFill, Img, OffthreadVideo, staticFile, useCurrentFrame } from "remotion";
+
+const staticFileK = (n: string) => staticFile(`kalpaweb/${n}`);
 
 // Dispositivos y recursos inspirados en referencias/04-recursos-y-camara.md, dibujados en CSS 3D.
 
@@ -385,3 +387,105 @@ export const GlassChip: React.FC<{ x: number; y: number; label: string; value: s
     <div style={{ fontSize: 58, fontWeight: 900, fontStyle: "italic", color, marginTop: 4 }}>{value}</div>
   </div>
 );
+
+/**
+ * Carrusel cóncavo (cámara dentro del anillo), como la Referencia 3.
+ * `open` 0→1 abre el anillo desde una sola página de frente; `rot` es la posición del giro
+ * en "páginas" (1 = una página completa). Lados oscuros y desenfocados.
+ */
+export const ConcaveRing: React.FC<{ pages: string[]; w: number; h: number; y: number; step: number; R: number; open: number; rot: number }> = ({
+  pages,
+  w,
+  h,
+  y,
+  step,
+  R,
+  open,
+  rot,
+}) => {
+  const n = pages.length;
+  const items = [];
+  // páginas visibles a cada lado del centro
+  for (let k = -3; k <= 3; k++) {
+    const idx = (((Math.floor(rot) + k) % n) + n) % n;
+    const off = k - (rot - Math.floor(rot)); // posición relativa al centro (en páginas)
+    const ang = off * step * open;
+    const side = Math.min(1, Math.abs(ang) / (step * 2));
+    items.push(
+      <div
+        key={k}
+        style={{
+          position: "absolute",
+          inset: 0,
+          // Anillo cóncavo con la cámara al centro: posición explícita y la página mirando al centro
+          transform: `translate3d(${R * Math.sin((ang * Math.PI) / 180)}px, 0, ${R * (1 - Math.cos((ang * Math.PI) / 180))}px) rotateY(${-ang}deg)`,
+          opacity: open < 0.05 && k !== 0 ? 0 : 1,
+          filter: `brightness(${1 - side * 0.55}) blur(${side * 3}px)`,
+        }}
+      >
+        <Img src={pages[idx]} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 0%", borderRadius: 6 }} />
+      </div>,
+    );
+  }
+  return (
+    <div style={{ position: "absolute", left: 0, right: 0, top: y, height: h, perspective: 1100 }}>
+      <div style={{ position: "absolute", left: "50%", top: 0, width: w, height: h, marginLeft: -w / 2, transformStyle: "preserve-3d" }}>{items}</div>
+    </div>
+  );
+};
+
+/**
+ * Universo gráfico KALPA (reemplaza la luz/horizonte de referencia): patrón andino de rombos
+ * de la web, resplandor rojo del hero, granos de café flotando en capas y chispas doradas.
+ */
+export const KalpaWorld: React.FC<{ warm?: number; beans?: number; pattern?: number }> = ({ warm = 1, beans = 1, pattern = 1 }) => {
+  const f = useCurrentFrame();
+  const BEANS = [
+    // x, y, tamaño, profundidad (blur), rotación inicial, velocidad
+    [80, 1080, 150, 6, -30, 0.5],
+    [930, 980, 190, 9, 40, 0.7],
+    [860, 210, 90, 2, 10, 0.35],
+    [140, 300, 70, 1.5, 70, 0.3],
+    [560, 1240, 120, 4, -60, 0.45],
+  ];
+  return (
+    <AbsoluteFill style={{ pointerEvents: "none", overflow: "hidden" }}>
+      {/* patrón de rombos, enmascarado al centro y desplazándose lento */}
+      <AbsoluteFill
+        style={{
+          opacity: 0.22 * pattern,
+          WebkitMaskImage: "radial-gradient(70% 55% at 50% 45%, #000 0%, transparent 80%)",
+          maskImage: "radial-gradient(70% 55% at 50% 45%, #000 0%, transparent 80%)",
+        }}
+      >
+        <Img
+          src={staticFileK("kalpa-pattern.png")}
+          style={{ position: "absolute", left: -200 + f * 0.4, top: -150, width: 1600, height: 1264, objectFit: "cover" }}
+        />
+      </AbsoluteFill>
+      {/* resplandor rojo del hero desde arriba */}
+      <AbsoluteFill
+        style={{
+          background: `radial-gradient(80% 45% at ${50 + Math.sin(f / 60) * 6}% 0%, rgba(152,22,8,${0.55 * warm}) 0%, rgba(90,12,5,${0.3 * warm}) 40%, rgba(0,0,0,0) 75%)`,
+        }}
+      />
+      {/* granos de café en capas de profundidad */}
+      {beans > 0 &&
+        BEANS.map(([x, y, s, b, r0, v], i) => (
+          <Img
+            key={i}
+            src={staticFileK("bean.png")}
+            style={{
+              position: "absolute",
+              left: x + Math.sin(f / 50 + i) * 14,
+              top: y - f * v + Math.cos(f / 45 + i) * 10,
+              width: s,
+              opacity: 0.85 * beans,
+              filter: `blur(${b}px) brightness(.85)`,
+              transform: `rotate(${r0 + f * (i % 2 ? 0.4 : -0.3)}deg)`,
+            }}
+          />
+        ))}
+    </AbsoluteFill>
+  );
+};
