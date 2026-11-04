@@ -28,3 +28,8 @@ fuera), que solo giraba → se veía plano y pobre.
   final) → giro continuo.
 - Desenfoque y oscurecimiento proporcionales al ángulo respecto del centro.
 - Giro con velocidad constante, sin rebotes; entrada y salida con ease.
+- **Separación:** el ángulo entre páginas debe superar el ángulo que ocupa cada página
+  (2·atan(ancho/2 ÷ R)); si no, se solapan.
+- **No usar el apilado 3D de CSS** (`preserve-3d`) para el anillo: Chrome ordena mal las capas y
+  se cruzan. Proyectar cada página a mano y aplicar `matrix3d` (ver `ConcaveRing` en
+  `remotion/src/videos/kalpaweb/devices.tsx`); descartar páginas a más de ~70° del centro.

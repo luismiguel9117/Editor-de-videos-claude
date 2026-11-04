@@ -388,10 +388,25 @@ export const GlassChip: React.FC<{ x: number; y: number; label: string; value: s
   </div>
 );
 
+/** matrix3d que lleva un rectángulo w×h a un cuadrilátero (sup-izq, sup-der, inf-izq, inf-der) */
+const quadMatrix = (w: number, h: number, q: [number, number][]) => {
+  const [[x0, y0], [x1, y1], [x2, y2], [x3, y3]] = q;
+  const dx1 = x1 - x3, dx2 = x2 - x3, dx3 = x0 - x1 + x3 - x2;
+  const dy1 = y1 - y3, dy2 = y2 - y3, dy3 = y0 - y1 + y3 - y2;
+  const det = dx1 * dy2 - dx2 * dy1;
+  const g = (dx3 * dy2 - dx2 * dy3) / det;
+  const hh = (dx1 * dy3 - dx3 * dy1) / det;
+  const a = x1 - x0 + g * x1, b = x2 - x0 + hh * x2;
+  const d = y1 - y0 + g * y1, e = y2 - y0 + hh * y2;
+  const M = [a / w, d / w, 0, g / w, b / h, e / h, 0, hh / h, 0, 0, 1, 0, x0, y0, 0, 1];
+  return `matrix3d(${M.map((n) => n.toFixed(9)).join(",")})`;
+};
+
 /**
- * Carrusel cóncavo (cámara dentro del anillo), como la Referencia 3.
- * `open` 0→1 abre el anillo desde una sola página de frente; `rot` es la posición del giro
- * en "páginas" (1 = una página completa). Lados oscuros y desenfocados.
+ * Carrusel cóncavo (cámara en el centro del anillo), como la Referencia 3.
+ * La perspectiva de cada página se calcula a mano (proyección exacta + matrix3d), sin depender
+ * del apilado 3D del navegador, así las páginas nunca se cruzan.
+ * `open` 0→1 abre el anillo desde una sola página de frente; `rot` = giro en páginas.
  */
 export const ConcaveRing: React.FC<{ pages: string[]; w: number; h: number; y: number; step: number; R: number; open: number; rot: number }> = ({
   pages,
@@ -404,34 +419,51 @@ export const ConcaveRing: React.FC<{ pages: string[]; w: number; h: number; y: n
   rot,
 }) => {
   const n = pages.length;
+  const cx = 540;
+  const cy = y + h / 2;
+  const proj = (X: number, Y: number, Z: number): [number, number] => {
+    const k = R / (R - Z);
+    return [cx + X * k, cy + Y * k];
+  };
   const items = [];
-  // páginas visibles a cada lado del centro
-  for (let k = -3; k <= 3; k++) {
+  for (let k = -2; k <= 2; k++) {
     const idx = (((Math.floor(rot) + k) % n) + n) % n;
-    const off = k - (rot - Math.floor(rot)); // posición relativa al centro (en páginas)
-    const ang = off * step * open;
-    const side = Math.min(1, Math.abs(ang) / (step * 2));
-    items.push(
-      <div
-        key={k}
-        style={{
-          position: "absolute",
-          inset: 0,
-          // Anillo cóncavo con la cámara al centro: posición explícita y la página mirando al centro
-          transform: `translate3d(${R * Math.sin((ang * Math.PI) / 180)}px, 0, ${R * (1 - Math.cos((ang * Math.PI) / 180))}px) rotateY(${-ang}deg)`,
-          opacity: k === 0 ? 1 : open * open,
-          filter: `brightness(${1 - side * 0.55}) blur(${side * 3}px)`,
-        }}
-      >
-        <Img src={pages[idx]} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 0%", borderRadius: 6 }} />
-      </div>,
-    );
+    const off = k - (rot - Math.floor(rot));
+    const ang = ((off * step * open) * Math.PI) / 180;
+    if (Math.abs(ang) > 1.25) continue; // fuera de cuadro
+    const corner = (lx: number, ly: number) =>
+      proj(R * Math.sin(ang) + lx * Math.cos(ang), ly, R * (1 - Math.cos(ang)) + lx * Math.sin(ang));
+    const q = [corner(-w / 2, -h / 2), corner(w / 2, -h / 2), corner(-w / 2, h / 2), corner(w / 2, h / 2)];
+    const side = Math.min(1, Math.abs(ang) / ((step * 2 * Math.PI) / 180));
+    items.push({
+      k,
+      el: (
+        <div
+          key={k}
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            width: w,
+            height: h,
+            transformOrigin: "0 0",
+            transform: quadMatrix(w, h, q),
+            opacity: k === 0 ? 1 : open * open,
+            filter: `brightness(${1 - side * 0.55}) blur(${side * 3}px)`,
+            borderRadius: 6,
+            overflow: "hidden",
+            boxShadow: "0 30px 70px rgba(0,0,0,.55)",
+          }}
+        >
+          <Img src={pages[idx]} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 0%" }} />
+        </div>
+      ),
+      d: Math.abs(off),
+    });
   }
-  return (
-    <div style={{ position: "absolute", left: 0, right: 0, top: y, height: h, perspective: 1100 }}>
-      <div style={{ position: "absolute", left: "50%", top: 0, width: w, height: h, marginLeft: -w / 2, transformStyle: "preserve-3d" }}>{items}</div>
-    </div>
-  );
+  // los laterales primero, la central encima
+  items.sort((a, b) => b.d - a.d);
+  return <AbsoluteFill>{items.map((i) => i.el)}</AbsoluteFill>;
 };
 
 /**
