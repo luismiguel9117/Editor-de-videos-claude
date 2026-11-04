@@ -2,7 +2,31 @@
 
 Video que presenta la web de KALPA diseñada por Luis Miguel.
 
-**Estado:** propuesta de guion (pendiente de aprobación).
+**Estado:** guion aprobado · frames estáticos listos para aprobar · voz: Luis Miguel (clonada con Voicebox o grabada).
+**Colores:** KALPA (obsidiana #0c0e12, dorado #fdb515, rojo #981608, Franklin Gothic) en todo el video;
+la firma final usa la marca luismiguel.pe (azul y negro).
+
+## Guion aprobado
+
+| # | Voz | Palabra gigante | Material real |
+|---|---|---|---|
+| 1 | "Este mes diseñé la nueva web de KALPA." | KALPA.PE | intro en celular (mano + lata) |
+| 2 | "Una web que se siente como la marca: con energía." | ENERGÍA | 3 slides del hero |
+| 3 | "Con una tienda pensada para comprar en dos clics." | TIENDA | tarjetas de precio (celular) |
+| 4 | "Que cuenta de dónde viene cada grano." | ORIGEN | VRAEM + energía natural |
+| 5 | "Y que se ve igual de bien en tu celular." | CELULAR | versión móvil |
+| 6 | "Cinco páginas, un solo sistema." | 5 PÁGINAS | Promociones, Nosotros, Productos, Producto |
+| 7 | "Lista para vender en Shopify." | SHOPIFY | carrito abierto + ficha de producto |
+| 8 | — | Luis *Miguel*. + kalpa.pe | firma (marca luismiguel.pe) |
+
+Escenas: `remotion/src/videos/kalpaweb/scenes.tsx` (Studio → carpeta `kalpa-web`).
+Capturas: `remotion/public/kalpaweb/`.
+
+## Nota sobre la web
+En `index.html` (vista HTML de `main`) el carrusel del hero no rota: `let currentProductSlide`
+está declarado en `assets/theme.js` y otra vez en el script en línea de `index.html`, y ese error
+detiene el script en línea (carrusel del hero, carrito, reseñas). En el tema de Shopify no pasa,
+porque solo `theme.js` lo declara.
 
 ## Fuente
 - Repo `luismiguel9117/HERO-KALLPA`. La rama `shopify-theme` (tema Shopify OS 2.0) se sincroniza
