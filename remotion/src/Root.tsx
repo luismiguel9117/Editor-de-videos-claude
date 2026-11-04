@@ -59,7 +59,7 @@ export const RemotionRoot: React.FC = () => {
 
       <Folder name="kalpa-web">
         {KALPAWEB_SCENES.map((s) => (
-          <Composition key={s.id} id={s.id} component={s.component} fps={30} width={1080} height={1920} durationInFrames={120} />
+          <Composition key={s.id} id={s.id} component={s.component} fps={30} width={1080} height={1350} durationInFrames={120} />
         ))}
       </Folder>
       <Folder name="kalpa-electricidad">

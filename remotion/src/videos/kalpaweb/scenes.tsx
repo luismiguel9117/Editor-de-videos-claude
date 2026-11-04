@@ -1,6 +1,6 @@
 import { loadFont } from "@remotion/fonts";
 import React from "react";
-import { AbsoluteFill, Easing, Img, interpolate, random, staticFile, useCurrentFrame } from "remotion";
+import { AbsoluteFill, Easing, Img, interpolate, random, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import "../../brand/fonts";
 import { BlueWaves, Grain } from "../../brand/elements";
 import { useFloat } from "../../brand/motion";
@@ -36,6 +36,7 @@ const W = (n: string) => staticFile(`kalpaweb/${n}.png`);
 /** Fondo KALPA: obsidiana con luz dorada/roja difusa y chispas doradas */
 const KalpaBg: React.FC<{ warm?: number; children: React.ReactNode }> = ({ warm = 1, children }) => {
   const f = useCurrentFrame();
+  const { height } = useVideoConfig();
   return (
     <AbsoluteFill style={{ background: K.bg, overflow: "hidden" }}>
       <AbsoluteFill
@@ -52,7 +53,7 @@ const KalpaBg: React.FC<{ warm?: number; children: React.ReactNode }> = ({ warm 
             style={{
               position: "absolute",
               left: random(`x${i}`) * 1080 + t * 30,
-              top: 1940 - t * 2100,
+              top: height + 20 - t * (height + 160),
               width: 3 + random(`s${i}`) * 4,
               height: 3 + random(`s${i}`) * 4,
               borderRadius: "50%",
@@ -154,7 +155,7 @@ const Giant: React.FC<{ children: React.ReactNode; top: number; size: number; co
 };
 
 /** Frase pequeña (Franklin Gothic Demi) */
-const Line: React.FC<{ children: React.ReactNode; top?: number }> = ({ children, top = 230 }) => {
+const Line: React.FC<{ children: React.ReactNode; top?: number }> = ({ children, top = 110 }) => {
   const f = useCurrentFrame();
   const p = ease(f, 0, 14);
   return (
@@ -166,7 +167,7 @@ const Line: React.FC<{ children: React.ReactNode; top?: number }> = ({ children,
         top,
         fontFamily: FG,
         fontWeight: 600,
-        fontSize: 54,
+        fontSize: 46,
         lineHeight: 1.15,
         color: K.text,
         opacity: p,
@@ -179,44 +180,41 @@ const Line: React.FC<{ children: React.ReactNode; top?: number }> = ({ children,
   );
 };
 
-// 1 · "Este mes diseñé la nueva web de KALPA." — el intro real en celular, a sangre
-export const W1Intro: React.FC = () => {
-  const f = useCurrentFrame();
-  return (
-    <KalpaBg>
-      <AbsoluteFill style={{ transform: `scale(${1.08 + f * 0.0008})` }}>
-        <Img src={W("m-intro")} style={{ width: 1080, height: 2341, marginTop: -200 }} />
-      </AbsoluteFill>
-      <AbsoluteFill style={{ background: "linear-gradient(to top, #0c0e12 0%, #0c0e12 24%, rgba(12,14,18,.85) 34%, rgba(12,14,18,0) 50%)" }} />
-      <Line top={1440}>Este mes diseñé la nueva web de</Line>
-      <Giant top={1530} size={210} color={K.gold}>
-        kalpa.pe
-      </Giant>
-    </KalpaBg>
-  );
-};
+// Formato 1080×1350 (4:5). Protagonista: la web de escritorio; el celular solo en la escena 5.
+
+// 1 · "Este mes diseñé la nueva web de KALPA." — el intro real de escritorio
+export const W1Intro: React.FC = () => (
+  <KalpaBg>
+    <Line>Este mes diseñé la nueva web de</Line>
+    <Giant top={200} size={210}>
+      kalpa.pe
+    </Giant>
+    <Sheet src={W("d-intro")} x={-150} y={430} w={1380} h={862} ry={12} rz={-2} seed={0.3} />
+  </KalpaBg>
+);
 
 // 2 · "Una web que se siente como la marca: con energía." — los 3 slides del hero en abanico
 export const W2Energia: React.FC = () => (
   <KalpaBg>
     <Line>Una web que se siente como la marca: con</Line>
-    <Sheet src={W("d-hero-3")} x={-360} y={560} w={1240} h={775} ry={28} rz={-4} seed={2} dim={0.35} />
-    <Sheet src={W("d-hero-2")} x={-120} y={690} w={1240} h={775} ry={18} rz={-2} seed={1} dim={0.15} />
-    <Giant top={470} size={230}>
+    <Sheet src={W("d-hero-3")} x={-330} y={380} w={1100} h={688} ry={28} rz={-4} seed={2} dim={0.35} />
+    <Sheet src={W("d-hero-2")} x={-110} y={490} w={1100} h={688} ry={18} rz={-2} seed={1} dim={0.15} />
+    <Giant top={250} size={200}>
       energía
     </Giant>
-    <Sheet src={W("d-hero-1")} x={120} y={860} w={1240} h={775} ry={10} seed={0} />
+    <Sheet src={W("d-hero-1")} x={120} y={610} w={1100} h={688} ry={10} seed={0} />
   </KalpaBg>
 );
 
-// 3 · "Con una tienda pensada para comprar en dos clics." — tarjetas de precio reales, de cerca
+// 3 · "Con una tienda pensada para comprar en dos clics." — ficha de producto con precio y carrito
 export const W3Tienda: React.FC = () => (
   <KalpaBg warm={0.7}>
-    <Line>Con una tienda pensada para comprar en dos clics.</Line>
-    <Giant top={440} size={250} color={K.text}>
+    <Line>Una tienda para comprar en dos clics.</Line>
+    <Sheet src={W("d-products")} x={-380} y={420} w={1100} h={688} ry={24} rz={-3} seed={1.9} dim={0.35} />
+    <Giant top={250} size={230} color={K.text}>
       tienda
     </Giant>
-    <Sheet src={W("m-products")} x={110} y={700} w={860} h={1180} pos="50% 62%" zoom={1} rz={-3} ry={-8} seed={1.4} />
+    <Sheet src={W("page-producto")} x={60} y={520} w={1150} h={719} ry={-10} rz={1} seed={1.4} />
   </KalpaBg>
 );
 
@@ -224,23 +222,23 @@ export const W3Tienda: React.FC = () => (
 export const W4Origen: React.FC = () => (
   <KalpaBg>
     <Line>Que cuenta de dónde viene cada grano.</Line>
-    <Sheet src={W("d-energy")} x={180} y={1180} w={1100} h={688} ry={-14} seed={3} dim={0.2} />
-    <Giant top={560} size={250}>
+    <Sheet src={W("d-energy")} x={160} y={700} w={1100} h={688} ry={-14} seed={3} dim={0.2} />
+    <Giant top={250} size={220}>
       origen
     </Giant>
-    <Sheet src={W("d-origin")} x={-200} y={820} w={1100} h={688} ry={14} rz={2} seed={2.2} />
+    <Sheet src={W("d-origin")} x={-200} y={470} w={1100} h={688} ry={14} rz={2} seed={2.2} />
   </KalpaBg>
 );
 
-// 5 · "Y que se ve igual de bien en tu celular." — la versión móvil real, láminas altas
+// 5 · "Y que se ve igual de bien en tu celular." — escritorio de fondo y la versión móvil delante
 export const W5Movil: React.FC = () => (
   <KalpaBg>
     <Line>Y que se ve igual de bien en tu</Line>
-    <Sheet src={W("m-reels")} x={520} y={740} w={500} h={1084} ry={-18} rz={3} seed={4} dim={0.25} />
-    <Giant top={400} size={225} color={K.text}>
+    <Sheet src={W("d-reels")} x={-260} y={430} w={1250} h={781} ry={16} rz={-2} seed={4} dim={0.3} />
+    <Giant top={230} size={200} color={K.text}>
       celular
     </Giant>
-    <Sheet src={W("m-origin")} x={70} y={680} w={560} h={1214} ry={12} rz={-3} seed={3.3} />
+    <Sheet src={W("m-origin")} x={640} y={360} w={380} h={823} ry={-14} rz={3} seed={3.3} />
   </KalpaBg>
 );
 
@@ -250,17 +248,17 @@ export const W6Paginas: React.FC = () => {
   return (
     <KalpaBg>
       <Line>Un solo sistema en</Line>
-      <Giant top={330} size={200}>
+      <Giant top={200} size={180}>
         5 páginas
       </Giant>
       {pages.map((p, i) => (
         <Sheet
           key={p}
           src={W(p)}
-          x={-260 + i * 120}
-          y={650 + i * 230}
-          w={1100}
-          h={688}
+          x={-240 + i * 110}
+          y={420 + i * 190}
+          w={1000}
+          h={625}
           ry={24 - i * 4}
           rz={-6 + i * 1.5}
           seed={i * 1.3}
@@ -271,15 +269,15 @@ export const W6Paginas: React.FC = () => {
   );
 };
 
-// 7 · "Lista para vender en Shopify." — el carrito real abierto
+// 7 · "Lista para vender en Shopify." — el carrito real abierto sobre la ficha de producto
 export const W7Shopify: React.FC = () => (
   <KalpaBg warm={0.6}>
     <Line>Lista para vender en</Line>
-    <Giant top={330} size={230} color={K.text}>
+    <Giant top={200} size={210} color={K.text}>
       Shopify
     </Giant>
-    <Sheet src={W("page-producto")} x={-420} y={900} w={1200} h={750} pos="0% 0%" ry={20} rz={-3} seed={5.5} dim={0.35} />
-    <Sheet src={W("d-cart")} x={300} y={720} w={720} h={900} pos="100% 0%" zoom={1} ry={-12} rz={2} seed={5} />
+    <Sheet src={W("page-producto")} x={-400} y={500} w={1150} h={719} pos="0% 0%" ry={20} rz={-3} seed={5.5} dim={0.35} />
+    <Sheet src={W("d-cart")} x={420} y={420} w={600} h={800} pos="100% 0%" ry={-12} rz={2} seed={5} />
   </KalpaBg>
 );
 
@@ -295,7 +293,7 @@ export const W8Firma: React.FC = () => {
           position: "absolute",
           left: 80,
           right: 80,
-          top: 1000,
+          top: 560,
           color: LM.ink,
           opacity: p,
           filter: `blur(${(1 - p) * 14}px)`,
@@ -303,11 +301,11 @@ export const W8Firma: React.FC = () => {
           lineHeight: 0.9,
         }}
       >
-        <div style={{ fontFamily: LMF.sans, fontWeight: 500, fontSize: 300, letterSpacing: "-0.04em" }}>Luis</div>
-        <div style={{ fontFamily: LMF.serif, fontStyle: "italic", fontSize: 330, textAlign: "right", letterSpacing: "-0.03em" }}>
+        <div style={{ fontFamily: LMF.sans, fontWeight: 500, fontSize: 250, letterSpacing: "-0.04em" }}>Luis</div>
+        <div style={{ fontFamily: LMF.serif, fontStyle: "italic", fontSize: 280, textAlign: "right", letterSpacing: "-0.03em" }}>
           Miguel<span style={{ color: LM.red }}>.</span>
         </div>
-        <div style={{ fontFamily: LMF.mono, fontSize: 34, letterSpacing: "0.06em", color: LM.ink, opacity: 0.75, marginTop: 50 }}>
+        <div style={{ fontFamily: LMF.mono, fontSize: 32, letterSpacing: "0.06em", color: LM.ink, opacity: 0.75, marginTop: 44 }}>
           kalpa.pe
         </div>
       </div>

@@ -1,6 +1,6 @@
 # Proyecto: presentación de la web KALPA (kalpa.pe)
 
-Video que presenta la web de KALPA diseñada por Luis Miguel.
+Video 1080×1350 (4:5) que presenta la web de KALPA diseñada por Luis Miguel. Protagonista: la versión de escritorio (el celular solo en la escena 5).
 
 **Estado:** guion aprobado · frames estáticos listos para aprobar · voz: Luis Miguel (clonada con Voicebox o grabada).
 **Colores:** KALPA (obsidiana #0c0e12, dorado #fdb515, rojo #981608, Franklin Gothic) en todo el video;
@@ -12,7 +12,7 @@ la firma final usa la marca luismiguel.pe (azul y negro).
 |---|---|---|---|
 | 1 | "Este mes diseñé la nueva web de KALPA." | KALPA.PE | intro en celular (mano + lata) |
 | 2 | "Una web que se siente como la marca: con energía." | ENERGÍA | 3 slides del hero |
-| 3 | "Con una tienda pensada para comprar en dos clics." | TIENDA | tarjetas de precio (celular) |
+| 3 | "Con una tienda pensada para comprar en dos clics." | TIENDA | ficha de producto con precio y carrito (escritorio) |
 | 4 | "Que cuenta de dónde viene cada grano." | ORIGEN | VRAEM + energía natural |
 | 5 | "Y que se ve igual de bien en tu celular." | CELULAR | versión móvil |
 | 6 | "Cinco páginas, un solo sistema." | 5 PÁGINAS | Promociones, Nosotros, Productos, Producto |
