@@ -135,9 +135,9 @@ export const W1Busca: React.FC = () => {
   const f = useCurrentFrame();
   const pop = useSpring(0, 10);
   const morph = ease(f, 12, 30);
-  const typed = Math.max(0, Math.min(8, Math.floor((f - 30) / 4.5)));
-  const press = interpolate(f, [100, 103, 108], [0, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const flat = ease(f, 110, 124);
+  const typed = Math.max(0, Math.min(8, Math.floor((f - 26) / 4)));
+  const press = interpolate(f, [88, 91, 96], [0, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const flat = ease(f, 96, 108);
   return (
     <Stage horizon={0.7}>
       <div style={{ position: "absolute", inset: 0, transform: `scale(${0.4 + pop * 0.6})`, transformOrigin: "540px 616px", opacity: Math.min(1, pop * 2) }}>
@@ -279,14 +279,14 @@ export const W6Movil: React.FC = () => (
 export const W7Paginas: React.FC = () => {
   const f = useCurrentFrame();
   const enter = useSpring(0, 18);
-  const open = ease(f, 16, 44);
-  const rot = interpolate(f, [30, 120], [0, 2.6], { extrapolateLeft: "clamp", extrapolateRight: "extend" });
+  const open = ease(f, 12, 38);
+  const rot = interpolate(f, [26, 96], [0, 2], { extrapolateLeft: "clamp", extrapolateRight: "extend" });
   const pages = ["d-hero-1", "page-producto", "page-productos", "page-nosotros", "page-promociones"].map(W);
   return (
     <Stage horizon={0}>
       <Stack lines={[{ t: "5 páginas.", gold: true }, { t: "1 sistema." }]} y={100} size={140} delay={8} />
       <div style={{ position: "absolute", inset: 0, transform: `scale(${1.25 - open * 0.25}) translateY(${(1 - enter) * 120}px)`, opacity: enter, transformOrigin: "540px 870px" }}>
-        <ConcaveRing pages={pages} w={820} h={512} y={620} step={34} R={1150} open={open} rot={rot} />
+        <ConcaveRing pages={pages} w={780} h={488} y={630} step={46} R={1100} open={open} rot={rot} />
       </div>
     </Stage>
   );

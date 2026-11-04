@@ -419,7 +419,7 @@ export const ConcaveRing: React.FC<{ pages: string[]; w: number; h: number; y: n
           inset: 0,
           // Anillo cóncavo con la cámara al centro: posición explícita y la página mirando al centro
           transform: `translate3d(${R * Math.sin((ang * Math.PI) / 180)}px, 0, ${R * (1 - Math.cos((ang * Math.PI) / 180))}px) rotateY(${-ang}deg)`,
-          opacity: open < 0.05 && k !== 0 ? 0 : 1,
+          opacity: k === 0 ? 1 : open * open,
           filter: `brightness(${1 - side * 0.55}) blur(${side * 3}px)`,
         }}
       >
