@@ -4,6 +4,7 @@ import { SfxDemo } from "./SfxDemo";
 import { KALLPA_REEL, KallpaReel } from "./videos/KallpaReel";
 import { KALPA_SCENES } from "./videos/kalpa/scenes";
 import { KALPAWEB_SCENES } from "./videos/kalpaweb/scenes";
+import { KALPA_WEB_REEL, KalpaWebReel } from "./videos/kalpaweb/KalpaWebReel";
 import { KALPA_PROCESO_REEL, KalpaProcesoReel } from "./videos/kalpa/KalpaProcesoReel";
 import { CarouselScene, CarouselStory, KALLPA_PROCESO_CAROUSEL } from "./videos/KallpaProceso";
 import { Logo } from "./HelloWorld/Logo";
@@ -58,6 +59,7 @@ export const RemotionRoot: React.FC = () => {
       />
 
       <Folder name="kalpa-web">
+        <Composition id="KalpaWebReel" component={KalpaWebReel} {...KALPA_WEB_REEL} />
         {KALPAWEB_SCENES.map((s) => (
           <Composition key={s.id} id={s.id} component={s.component} fps={30} width={1080} height={1350} durationInFrames={120} />
         ))}

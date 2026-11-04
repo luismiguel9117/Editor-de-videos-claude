@@ -1,5 +1,5 @@
 import React from "react";
-import { AbsoluteFill, Img, useCurrentFrame } from "remotion";
+import { AbsoluteFill, Img, OffthreadVideo, useCurrentFrame } from "remotion";
 
 // Dispositivos y recursos inspirados en referencias/04-recursos-y-camara.md, dibujados en CSS 3D.
 
@@ -129,17 +129,23 @@ export const Phone: React.FC<Screen & { x: number; y: number; w: number; rx?: nu
 };
 
 /** Barra de búsqueda: el texto se teclea (`typed` = nº de letras) con botón en color de marca */
-export const SearchBar: React.FC<{ text: string; typed: number; w: number; x: number; y: number; color: string; morph?: number }> = ({
-  text,
-  typed,
-  w,
-  x,
-  y,
-  color,
-  morph = 1,
-}) => {
+export const SearchBar: React.FC<{
+  text: string;
+  typed: number;
+  w: number;
+  x: number;
+  y: number;
+  color: string;
+  morph?: number;
+  /** 0 → barra; 1 → franja dorada a todo el ancho (transición a la web) */
+  flat?: number;
+  press?: number;
+}> = ({ text, typed, w: w0, x: x0, y: y0, color, morph = 1, flat = 0, press = 0 }) => {
   const frame = useCurrentFrame();
-  const h = 112;
+  const h = 112 - flat * 96;
+  const w = w0 + (1080 - w0) * flat;
+  const x = x0 * (1 - flat);
+  const y = y0 + (112 - h) / 2;
   const cur = Math.floor(frame / 8) % 2 === 0;
   return (
     <div
@@ -150,7 +156,7 @@ export const SearchBar: React.FC<{ text: string; typed: number; w: number; x: nu
         width: h + (w - h) * morph,
         height: h,
         borderRadius: h,
-        background: morph < 0.05 ? color : "#ffffff",
+        background: morph < 0.05 || flat > 0.5 ? color : "#ffffff",
         boxShadow: "0 30px 70px rgba(0,0,0,.5)",
         overflow: "hidden",
       }}
@@ -167,7 +173,7 @@ export const SearchBar: React.FC<{ text: string; typed: number; w: number; x: nu
           fontWeight: 500,
           fontSize: 46,
           color: "#0c0e12",
-          opacity: morph,
+          opacity: morph * (1 - flat * 3),
           letterSpacing: "-0.01em",
         }}
       >
@@ -183,6 +189,8 @@ export const SearchBar: React.FC<{ text: string; typed: number; w: number; x: nu
           height: h - 16,
           borderRadius: "50%",
           background: color,
+          opacity: 1 - flat * 3,
+          transform: `scale(${1 - press * 0.12})`,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -331,10 +339,13 @@ export const Piece: React.FC<{
   z?: number;
   glow?: string;
   radius?: number;
-}> = ({ src, crop, x, y, w, rx = 0, ry = 0, rz = 0, z = 0, glow = "rgba(253,181,21,.18)", radius = 14 }) => {
+  /** video capturado de la misma página (mismo tamaño que la captura, 2160 px de ancho) */
+  video?: string;
+  style?: React.CSSProperties;
+}> = ({ src, crop, x, y, w, rx = 0, ry = 0, rz = 0, z = 0, glow = "rgba(253,181,21,.18)", radius = 14, video, style }) => {
   const k = w / crop.w;
   return (
-    <div style={{ position: "absolute", left: x, top: y, width: w, height: crop.h * k, perspective: 1600 }}>
+    <div style={{ position: "absolute", left: x, top: y, width: w, height: crop.h * k, perspective: 1600, ...style }}>
       <div
         style={{
           width: "100%",
@@ -345,7 +356,11 @@ export const Piece: React.FC<{
           boxShadow: `0 40px 90px rgba(0,0,0,.6), 0 0 60px ${glow}, inset 0 0 0 1px rgba(255,255,255,.08)`,
         }}
       >
-        <Img src={src} style={{ width: 2160 * k, maxWidth: "none", marginLeft: -crop.x * k, marginTop: -crop.y * k }} />
+        {video ? (
+          <OffthreadVideo src={video} muted style={{ width: 2160 * k, maxWidth: "none", marginLeft: -crop.x * k, marginTop: -crop.y * k }} />
+        ) : (
+          <Img src={src} style={{ width: 2160 * k, maxWidth: "none", marginLeft: -crop.x * k, marginTop: -crop.y * k }} />
+        )}
       </div>
     </div>
   );
