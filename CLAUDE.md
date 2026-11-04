@@ -10,7 +10,8 @@
   (`.claude/skills/motion-premium/SKILL.md`): producto siempre vivo (entra, asienta, flota),
   transiciones largas y solapadas, sonido sobrio con reverb.
 - Composición: el producto es parte de la escena (capturas con fondo transparente, a sangre,
-  interactuando con la tipografía), nunca encerrado en tarjetas o marcos.
+  interactuando con la tipografía). Nada de marcos planos y aburridos. **Sí** a laptops, celulares
+  y tablets en 3D con dinamismo (órbitas, revelaciones, primeros planos), como en `referencias/`.
 
 - Todo video que se cree o edite en este repositorio sigue `ESTILO-LUISMIGUEL.md`
   (colores, tipografía, movimiento, transiciones, sonido y cierre). Léelo antes de empezar.
