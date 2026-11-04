@@ -35,6 +35,13 @@ porque solo `theme.js` lo declara.
 - Páginas: `index.html` (home), `productos.html`, `producto.html`, `nosotros.html`,
   `promociones.html`, `tienda.html`.
 
+## Fuente actual (importante)
+La web publicada **kalpa.pe** es la referencia de lo actual (tema Shopify, rama `shopify-theme`).
+La tienda (`/collections/all`), la ficha de producto (`/products/kalpa-cold-brew`) y el carrito
+se capturan desde kalpa.pe (archivos `public/kalpaweb/live-*.png`); el HTML de `main` está
+desactualizado en esas secciones. Precio actual Cold Brew unidad: **S/ 7.60**.
+Evitar mostrar productos "Agotado" o con precio S/. 0.00.
+
 ## Secciones de la home (orden real)
 1. Intro/preloader: estadio, cielo, mano lanzando la lata con canvas eléctrico — "ENERGÍA REAL PARA TU DÍA"
 2. Hero 3D con 3 slides: "CAFÉ DE VRAEM", "COLD BREW", "ENERGÍA LIMPIA" (lata Three.js)

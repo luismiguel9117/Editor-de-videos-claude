@@ -14,12 +14,12 @@ const ESTIMATED = {
   revela: 3.7,
   hero: 6.35,
   tienda: 9.45,
-  origen: 12.1,
-  movil: 15.6,
-  paginas: 18.25,
-  shopify: 21.5,
-  firma: 24.3,
-  end: 27.3,
+  origen: 13.6,
+  movil: 17.1,
+  paginas: 19.75,
+  shopify: 23,
+  firma: 25.8,
+  end: 28.8,
 };
 const VOICE = voiceTiming as Partial<typeof ESTIMATED> & { voiceOffset?: number };
 export const TIMING: typeof ESTIMATED = { ...ESTIMATED, ...VOICE };
@@ -83,7 +83,7 @@ export const KalpaWebReel: React.FC = () => {
         <Bloom duration={18} />
       </Sequence>
 
-      <Audio src={staticFile("music/kalpa-web-27s.wav")} volume={music} />
+      <Audio src={staticFile("music/kalpa-web-29s.wav")} volume={music} />
       {HAS_VOICE && (
         <Sequence from={Math.max(0, f(VOICE.voiceOffset ?? 0))} name="Voz">
           <Audio src={staticFile("voice/kalpa-web-vo.wav")} trimBefore={Math.max(0, -f(VOICE.voiceOffset ?? 0))} />
@@ -100,6 +100,7 @@ export const KalpaWebReel: React.FC = () => {
       <Sfx id="cinematic-whooshes/silk-sweep" at={mid("hero") - 20} volume={0.45} />
       <Sfx id="product-sounds/glint" at={s("hero") + 26} volume={0.3} />
       <Sfx id="cinematic-whooshes/deep-pass" at={mid("tienda") - 17} volume={0.45} />
+      <Sfx id="transitions/air-transition" at={s("tienda") + 58} volume={0.35} />
       <Sfx id="transitions/air-transition" at={mid("origen") - 11} volume={0.4} />
       <Sfx id="bass-impacts/sub-swell" at={s("origen")} volume={0.35} />
       <Sfx id="cinematic-whooshes/silk-sweep" at={mid("movil") - 20} volume={0.45} />

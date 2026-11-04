@@ -228,14 +228,34 @@ export const W3Hero: React.FC = () => {
   );
 };
 
-// 4 · Tienda: primer plano macro; la cámara se desliza del precio al botón (ref. 3)
+// 4 · Tienda: la tienda real (kalpa.pe/collections/all) hace scroll y luego primer plano de la
+//     ficha de producto actual, del precio al botón "Agregar al carrito" (ref. 3)
 export const W4Tienda: React.FC = () => {
   const f = useCurrentFrame();
-  const t = ease(f, 0, 90);
+  const enter = useSpring(0, 18);
+  const fl = useFloat(1.1, 8, 4);
+  const scroll = interpolate(f, [10, 64], [60, 300], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.inOut(Easing.cubic) });
+  const toMacro = ease(f, 58, 74);
+  const t = ease(f, 66, 124);
   return (
     <Stage horizon={0}>
-      <Macro src={W("page-producto")} scale={1.9 + t * 0.35} ox={240 + t * 140} oy={40 + t * 160} rx={34 - t * 6} rz={-12 + t * 3} />
-      <AbsoluteFill style={{ background: "linear-gradient(to bottom, rgba(7,8,10,.85) 0%, rgba(7,8,10,0) 30%, rgba(7,8,10,0) 75%, rgba(7,8,10,.8) 100%)" }} />
+      <div style={{ position: "absolute", inset: 0, opacity: 1 - toMacro, transform: `scale(${1 + toMacro * 0.15})` }}>
+        <Piece
+          src={W("live-tienda-full")}
+          crop={{ x: 0, y: scroll, w: 1480, h: 925 }}
+          x={-30}
+          y={440 + (1 - enter) * 160 + fl.y}
+          w={1140}
+          rx={14 + (1 - enter) * 26}
+          ry={-10 + f * 0.04}
+          rz={-1}
+          style={{ opacity: Math.min(1, enter * 1.5) }}
+        />
+      </div>
+      <AbsoluteFill style={{ opacity: toMacro }}>
+        <Macro src={W("live-producto")} scale={2.1 + t * 0.3} ox={150 + t * 190} oy={10 + t * 250} rx={30 - t * 6} rz={-10 + t * 3} />
+        <AbsoluteFill style={{ background: "linear-gradient(to bottom, rgba(7,8,10,.85) 0%, rgba(7,8,10,0) 30%, rgba(7,8,10,0) 75%, rgba(7,8,10,.8) 100%)" }} />
+      </AbsoluteFill>
       <Stack lines={[{ t: "Comprar" }, { t: "en 2 clics.", gold: true }]} y={90} size={140} delay={6} />
     </Stage>
   );
@@ -281,7 +301,7 @@ export const W7Paginas: React.FC = () => {
   const enter = useSpring(0, 18);
   const open = ease(f, 12, 38);
   const rot = interpolate(f, [26, 96], [0, 2], { extrapolateLeft: "clamp", extrapolateRight: "extend" });
-  const pages = ["d-hero-1", "page-producto", "page-productos", "page-nosotros", "page-promociones"].map(W);
+  const pages = ["d-hero-1", "live-tienda", "live-producto", "page-nosotros", "page-promociones"].map(W);
   return (
     <Stage horizon={0}>
       <Stack lines={[{ t: "5 páginas.", gold: true }, { t: "1 sistema." }]} y={100} size={140} delay={8} />
@@ -302,10 +322,10 @@ export const W8Shopify: React.FC = () => {
   return (
     <Stage beam={1.1}>
       <Stack lines={[{ t: "Lista para" }, { t: "Shopify.", gold: true }]} y={100} size={140} delay={10} />
-      <Piece src={W("page-producto")} crop={{ x: 0, y: 60, w: 2160, h: 1290 }} x={-260 - (1 - a) * 500} y={520 + fa.y} w={980} ry={22} rz={-3} glow="rgba(0,0,0,0)" style={{ opacity: a }} />
-      <Piece src={W("d-cart")} crop={{ x: 1500, y: 0, w: 660, h: 720 }} x={440 + (1 - b) * 600} y={420 + fb.y} w={600} ry={-12} rz={2} style={{ opacity: b }} />
-      <div style={{ position: "absolute", inset: 0, transform: `scale(${0.7 + c * 0.3})`, opacity: c, transformOrigin: "700px 1180px" }}>
-        <GlassChip x={560} y={1120} label="Total" value="S/ 7.90" />
+      <Piece src={W("live-producto")} crop={{ x: 0, y: 60, w: 2160, h: 1290 }} x={-260 - (1 - a) * 500} y={520 + fa.y} w={980} ry={22} rz={-3} glow="rgba(0,0,0,0)" style={{ opacity: a }} />
+      <Piece src={W("live-cart")} crop={{ x: 1500, y: 0, w: 660, h: 1350 }} x={520 + (1 - b) * 600} y={330 + fb.y} w={500} ry={-12} rz={2} style={{ opacity: b }} />
+      <div style={{ position: "absolute", inset: 0, transform: `scale(${0.7 + c * 0.3})`, opacity: c, transformOrigin: "280px 1170px" }}>
+        <GlassChip x={140} y={1110} label="Subtotal" value="S/ 7.60" />
       </div>
     </Stage>
   );
