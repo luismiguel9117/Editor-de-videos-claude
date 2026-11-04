@@ -164,16 +164,11 @@ export const W4Tienda: React.FC = () => (
   </Stage>
 );
 
-// 5 · Origen: la página se levanta en 3D desde el plano y hace scroll (ref. 3)
+// 5 · Origen: el hero de Nosotros con su animación de aparición, grande y apenas inclinado
 export const W5Origen: React.FC = () => (
-  <Stage horizon={0.5}>
-    <div style={{ position: "absolute", left: -60, top: 480, width: 1200, height: 750, perspective: 1300 }}>
-      <Img
-        src={W("d-origin")}
-        style={{ width: 1200, height: 750, transform: "rotateX(42deg) rotateZ(-8deg)", transformOrigin: "50% 100%", boxShadow: "0 60px 120px rgba(0,0,0,.7)", borderRadius: 8 }}
-      />
-    </div>
-    <Stack lines={[{ t: "De dónde" }, { t: "viene cada" }, { t: "grano.", gold: true }]} y={100} size={120} />
+  <Stage horizon={0.4}>
+    <Stack lines={[{ t: "De dónde" }, { t: "viene cada" }, { t: "grano.", gold: true }]} y={90} size={115} />
+    <Piece src={W("page-nosotros-hero")} crop={{ x: 0, y: 0, w: 2160, h: 1350 }} x={-40} y={520} w={1160} rx={10} ry={-8} rz={-1} />
   </Stage>
 );
 

@@ -13,7 +13,7 @@ la firma final usa la marca luismiguel.pe (azul y negro).
 | 1 | "Este mes diseñé la nueva web de KALPA." | KALPA.PE | intro en celular (mano + lata) |
 | 2 | "Una web que se siente como la marca: con energía." | ENERGÍA | 3 slides del hero |
 | 3 | "Con una tienda pensada para comprar en dos clics." | TIENDA | ficha de producto con precio y carrito (escritorio) |
-| 4 | "Que cuenta de dónde viene cada grano." | ORIGEN | VRAEM + energía natural |
+| 4 | "Que cuenta de dónde viene cada grano." | ORIGEN | hero de Nosotros con su animación de aparición (CSS) |
 | 5 | "Y que se ve igual de bien en tu celular." | CELULAR | versión móvil |
 | 6 | "Cinco páginas, un solo sistema." | 5 PÁGINAS | Promociones, Nosotros, Productos, Producto |
 | 7 | "Lista para vender en Shopify." | SHOPIFY | carrito abierto + ficha de producto |

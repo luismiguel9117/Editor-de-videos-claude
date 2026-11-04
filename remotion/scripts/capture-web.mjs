@@ -16,6 +16,7 @@
 //   setup: async (page) => {},             // antes del primer cuadro
 //   onFrame: async (page, { frame, t }) => {}, // antes de cada cuadro (t en segundos)
 //   transparent: true,                     // fondo transparente → public/footage/<nombre>.webm (VP9 con alfa)
+//   syncCss: true,                         // controla también las animaciones CSS (no las de scroll)
 // }
 
 import { execFileSync } from "node:child_process";
@@ -62,6 +63,16 @@ const started = Date.now();
 for (let frame = 0; frame < total; frame++) {
   if (sc.onFrame) await sc.onFrame(page, { frame, t: frame / fps, fps });
   await page.clock.runFor(1000 / fps);
+  if (sc.syncCss) {
+    // Las animaciones CSS no siguen el reloj de Playwright: se pausan y se posicionan a mano
+    await page.evaluate((ms) => {
+      for (const a of document.getAnimations()) {
+        if (!(a.timeline instanceof DocumentTimeline)) continue;
+        a.pause();
+        a.currentTime = ms;
+      }
+    }, ((frame + 1) / fps) * 1000 + (sc.cssOffsetMs ?? 0));
+  }
   const { data } = await cdp.send("Page.captureScreenshot", {
     format: "png",
     optimizeForSpeed: true,
