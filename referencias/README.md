@@ -8,6 +8,7 @@ no se guardan en el repo).
 | 1 | [New Website Promo](01-new-website-promo.md) | Barra de búsqueda + tipeo como gancho, scroll real de la web, cámara continua |
 | 2 | [NeuraFlow (Zelios)](02-neuraflow-zelios.md) | Universo de luz propio, UI que se arma sola, continuidad de formas, profundidad |
 | 3 | [Website Design Promo](03-website-design-promo.md) | Color de marca como transición (morph), perspectiva macro, carrusel cilíndrico, cortes en el beat |
+| — | [Recursos y cámara](04-recursos-y-camara.md) | Inventario de dispositivos, elementos, luces y movimientos de cámara, y cómo recrearlos |
 
 ## Qué tomamos para la presentación de kalpa.pe
 
