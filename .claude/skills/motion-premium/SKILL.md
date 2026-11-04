@@ -8,6 +8,16 @@ description: Detalles de movimiento y sonido que hacen que un video de producto 
 Feedback real del cliente: lo que da sensación premium son los **detalles de vida y suavidad**.
 Lo que lo arruina: sonidos de juguete y saltos bruscos entre escenas.
 
+## Estilo "anuncio de Apple" (pedido del cliente para presentaciones de producto/web)
+- **Una sola cosa en pantalla a la vez**: o una frase, o el producto. Nada de abanicos de 3–4 láminas ni collages.
+- **Ritmo texto ↔ producto**: un *beat* de texto sobre negro (1.5–2 s) y luego el producto en movimiento (3–4 s).
+- **Texto que cambia**: frases de 1–3 palabras que entran (blur → nítido, subida 20–30 px), se
+  sostienen y salen; la palabra clave se **reemplaza** por la siguiente en el mismo lugar
+  ("Nueva web." → "kalpa.pe"), con máscara o crossfade con blur, nunca de golpe.
+- **Mostrar las animaciones reales**: capturar en video la sección funcionando (intro, slides,
+  carrito, parallax) y dejarla verse completa, grande y centrada; la cámara solo empuja lento.
+- Mucho espacio negativo; tipografía grande y limpia; máximo un acento de color por beat.
+
 ## Antes de animar
 1. Propósito del video y qué elementos reales del producto usar (y cuáles omitir).
 2. Frames estáticos aprobados primero; movimiento después.

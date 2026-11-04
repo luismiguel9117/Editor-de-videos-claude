@@ -1,6 +1,6 @@
 import { loadFont } from "@remotion/fonts";
 import React from "react";
-import { AbsoluteFill, Easing, Img, interpolate, random, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, Easing, Img, interpolate, staticFile, useCurrentFrame } from "remotion";
 import "../../brand/fonts";
 import { BlueWaves, Grain } from "../../brand/elements";
 import { useFloat } from "../../brand/motion";
@@ -32,43 +32,6 @@ const easeOut = Easing.bezier(0.16, 1, 0.3, 1);
 const ease = (f: number, a: number, b: number) =>
   interpolate(f, [a, b], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: easeOut });
 const W = (n: string) => staticFile(`kalpaweb/${n}.png`);
-
-/** Fondo KALPA: obsidiana con luz dorada/roja difusa y chispas doradas */
-const KalpaBg: React.FC<{ warm?: number; children: React.ReactNode }> = ({ warm = 1, children }) => {
-  const f = useCurrentFrame();
-  const { height } = useVideoConfig();
-  return (
-    <AbsoluteFill style={{ background: K.bg, overflow: "hidden" }}>
-      <AbsoluteFill
-        style={{
-          background: `radial-gradient(70% 45% at ${50 + Math.sin(f / 50) * 6}% 55%, rgba(152,22,8,${0.55 * warm}) 0%, rgba(253,181,21,${0.12 * warm}) 35%, rgba(12,14,18,0) 75%)`,
-          filter: "blur(40px)",
-        }}
-      />
-      {new Array(18).fill(0).map((_, i) => {
-        const t = ((f + random(`o${i}`) * 300) % 300) / 300;
-        return (
-          <div
-            key={i}
-            style={{
-              position: "absolute",
-              left: random(`x${i}`) * 1080 + t * 30,
-              top: height + 20 - t * (height + 160),
-              width: 3 + random(`s${i}`) * 4,
-              height: 3 + random(`s${i}`) * 4,
-              borderRadius: "50%",
-              background: K.gold,
-              opacity: interpolate(t, [0, 0.15, 0.85, 1], [0, 0.8, 0.8, 0]),
-              boxShadow: "0 0 10px rgba(253,181,21,.9)",
-            }}
-          />
-        );
-      })}
-      {children}
-      <Grain opacity={0.07} />
-    </AbsoluteFill>
-  );
-};
 
 /** Página real de la web como lámina flotante en 3D (sin navegador ni marco) */
 const Sheet: React.FC<{
@@ -118,61 +81,47 @@ const Sheet: React.FC<{
   );
 };
 
-/** Palabra gigante en Franklin Gothic Heavy, cursiva y en mayúsculas, como los títulos de la web */
-const Giant: React.FC<{ children: React.ReactNode; top: number; size: number; color?: string; style?: React.CSSProperties }> = ({
-  children,
-  top,
-  size,
-  color = K.gold,
-  style,
-}) => {
+// Formato 1080×1350 (4:5). Estilo anuncio de Apple: una cosa a la vez, mucho negro y una
+// composición tipográfica distinta en cada beat. Protagonista: la web de escritorio.
+
+const T: React.FC<{
+  children: React.ReactNode;
+  x?: number;
+  y: number;
+  size: number;
+  color?: string;
+  weight?: number;
+  italic?: boolean;
+  align?: "left" | "right" | "center";
+  outline?: boolean;
+  delay?: number;
+  style?: React.CSSProperties;
+}> = ({ children, x = 0, y, size, color = K.text, weight = 900, italic = true, align = "left", outline, delay = 0, style }) => {
   const f = useCurrentFrame();
+  const p = ease(f, delay, delay + 18);
   return (
     <div
       style={{
         position: "absolute",
-        top,
-        width: "100%",
-        textAlign: "center",
+        left: align === "right" ? undefined : x,
+        right: align === "right" ? -x : undefined,
+        width: align === "center" ? "100%" : undefined,
+        top: y,
+        textAlign: align,
         fontFamily: FG,
-        fontWeight: 900,
-        fontStyle: "italic",
+        fontWeight: weight,
+        fontStyle: italic ? "italic" : "normal",
         fontSize: size,
-        lineHeight: 0.9,
-        letterSpacing: "-0.02em",
+        lineHeight: 0.86,
+        letterSpacing: "-0.03em",
         textTransform: "uppercase",
-        color,
         whiteSpace: "nowrap",
-        textShadow: "0 10px 40px rgba(0,0,0,.45)",
-        ...style,
-        transform: `translateX(${f * 0.3}px) skewX(-6deg) ${style?.transform ?? ""}`,
-        opacity: ease(f, 2, 16),
-      }}
-    >
-      {children}
-    </div>
-  );
-};
-
-/** Frase pequeña (Franklin Gothic Demi) */
-const Line: React.FC<{ children: React.ReactNode; top?: number }> = ({ children, top = 110 }) => {
-  const f = useCurrentFrame();
-  const p = ease(f, 0, 14);
-  return (
-    <div
-      style={{
-        position: "absolute",
-        left: 80,
-        right: 80,
-        top,
-        fontFamily: FG,
-        fontWeight: 600,
-        fontSize: 46,
-        lineHeight: 1.15,
-        color: K.text,
+        color: outline ? "transparent" : color,
+        WebkitTextStroke: outline ? `3px ${color}` : undefined,
         opacity: p,
-        filter: `blur(${(1 - p) * 10}px)`,
-        transform: `translateX(${f * 0.12}px)`,
+        filter: `blur(${(1 - p) * 12}px)`,
+        transform: `translateY(${(1 - p) * 28}px) translateX(${f * 0.25}px)`,
+        ...style,
       }}
     >
       {children}
@@ -180,109 +129,188 @@ const Line: React.FC<{ children: React.ReactNode; top?: number }> = ({ children,
   );
 };
 
-// Formato 1080×1350 (4:5). Protagonista: la web de escritorio; el celular solo en la escena 5.
+const Small: React.FC<{ children: React.ReactNode; x?: number; y: number; color?: string; size?: number; align?: "left" | "right" }> = ({
+  children,
+  x = 80,
+  y,
+  color = K.muted,
+  size = 40,
+  align = "left",
+}) => (
+  <T x={x} y={y} size={size} color={color} weight={600} italic={false} align={align} style={{ textTransform: "none", letterSpacing: "0", lineHeight: 1.2 }}>
+    {children}
+  </T>
+);
 
-// 1 · "Este mes diseñé la nueva web de KALPA." — el intro real de escritorio
+const Night: React.FC<{ children: React.ReactNode; glow?: string }> = ({ children, glow = "rgba(152,22,8,.35)" }) => (
+  <AbsoluteFill style={{ background: "#07080a", overflow: "hidden" }}>
+    <AbsoluteFill style={{ background: `radial-gradient(60% 40% at 60% 60%, ${glow} 0%, rgba(7,8,10,0) 70%)`, filter: "blur(40px)" }} />
+    {children}
+    <Grain opacity={0.06} />
+  </AbsoluteFill>
+);
+
+// 1 · "Este mes diseñé la nueva web de KALPA." — palabras gigantes que se salen del cuadro
 export const W1Intro: React.FC = () => (
-  <KalpaBg>
-    <Line>Este mes diseñé la nueva web de</Line>
-    <Giant top={200} size={210}>
+  <Night>
+    <Small y={250}>Este mes,</Small>
+    <T x={-30} y={330} size={360}>Nueva</T>
+    <T x={60} y={640} size={360} outline color={K.gold} delay={6} align="right">
+      web.
+    </T>
+    <T x={80} y={1110} size={72} color={K.gold} delay={14} italic={false} weight={600} style={{ textTransform: "none" }}>
       kalpa.pe
-    </Giant>
-    <Sheet src={W("d-intro")} x={-150} y={430} w={1380} h={862} ry={12} rz={-2} seed={0.3} />
-  </KalpaBg>
+    </T>
+  </Night>
 );
 
-// 2 · "Una web que se siente como la marca: con energía." — los 3 slides del hero en abanico
-export const W2Energia: React.FC = () => (
-  <KalpaBg>
-    <Line>Una web que se siente como la marca: con</Line>
-    <Sheet src={W("d-hero-3")} x={-330} y={380} w={1100} h={688} ry={28} rz={-4} seed={2} dim={0.35} />
-    <Sheet src={W("d-hero-2")} x={-110} y={490} w={1100} h={688} ry={18} rz={-2} seed={1} dim={0.15} />
-    <Giant top={250} size={200}>
-      energía
-    </Giant>
-    <Sheet src={W("d-hero-1")} x={120} y={610} w={1100} h={688} ry={10} seed={0} />
-  </KalpaBg>
-);
-
-// 3 · "Con una tienda pensada para comprar en dos clics." — ficha de producto con precio y carrito
-export const W3Tienda: React.FC = () => (
-  <KalpaBg warm={0.7}>
-    <Line>Una tienda para comprar en dos clics.</Line>
-    <Sheet src={W("d-products")} x={-380} y={420} w={1100} h={688} ry={24} rz={-3} seed={1.9} dim={0.35} />
-    <Giant top={250} size={230} color={K.text}>
-      tienda
-    </Giant>
-    <Sheet src={W("page-producto")} x={60} y={520} w={1150} h={719} ry={-10} rz={1} seed={1.4} />
-  </KalpaBg>
-);
-
-// 4 · "Que cuenta de dónde viene cada grano." — origen VRAEM y energía natural en parallax
-export const W4Origen: React.FC = () => (
-  <KalpaBg>
-    <Line>Que cuenta de dónde viene cada grano.</Line>
-    <Sheet src={W("d-energy")} x={160} y={700} w={1100} h={688} ry={-14} seed={3} dim={0.2} />
-    <Giant top={250} size={220}>
-      origen
-    </Giant>
-    <Sheet src={W("d-origin")} x={-200} y={470} w={1100} h={688} ry={14} rz={2} seed={2.2} />
-  </KalpaBg>
-);
-
-// 5 · "Y que se ve igual de bien en tu celular." — escritorio de fondo y la versión móvil delante
-export const W5Movil: React.FC = () => (
-  <KalpaBg>
-    <Line>Y que se ve igual de bien en tu</Line>
-    <Sheet src={W("d-reels")} x={-260} y={430} w={1250} h={781} ry={16} rz={-2} seed={4} dim={0.3} />
-    <Giant top={230} size={200} color={K.text}>
-      celular
-    </Giant>
-    <Sheet src={W("m-origin")} x={640} y={360} w={380} h={823} ry={-14} rz={3} seed={3.3} />
-  </KalpaBg>
-);
-
-// 6 · "Cinco páginas, un solo sistema." — las páginas internas en cascada
-export const W6Paginas: React.FC = () => {
-  const pages = ["page-promociones", "page-nosotros", "page-productos", "page-producto"];
+// 2 · "Una web que se siente como la marca: con energía." — la palabra rellena con la web real
+export const W2Energia: React.FC = () => {
+  const f = useCurrentFrame();
   return (
-    <KalpaBg>
-      <Line>Un solo sistema en</Line>
-      <Giant top={200} size={180}>
-        5 páginas
-      </Giant>
-      {pages.map((p, i) => (
-        <Sheet
-          key={p}
-          src={W(p)}
-          x={-240 + i * 110}
-          y={420 + i * 190}
-          w={1000}
-          h={625}
-          ry={24 - i * 4}
-          rz={-6 + i * 1.5}
-          seed={i * 1.3}
-          dim={(3 - i) * 0.12}
-        />
-      ))}
-    </KalpaBg>
+    <Night glow="rgba(253,181,21,.18)">
+      <Small y={330} x={0} align="left">
+        <span style={{ display: "block", width: 1080, textAlign: "center" }}>Una web que se siente como la marca.</span>
+      </Small>
+      <div
+        style={{
+          position: "absolute",
+          top: 470,
+          width: "100%",
+          textAlign: "center",
+          fontFamily: FG,
+          fontWeight: 900,
+          fontStyle: "italic",
+          fontSize: 300,
+          lineHeight: 1,
+          letterSpacing: "-0.03em",
+          // La imagen se precarga con el <Img> oculto de abajo (Remotion espera a que cargue)
+          // eslint-disable-next-line @remotion/no-background-image
+          backgroundImage: `url(${W("d-intro")})`,
+          backgroundSize: "1500px auto",
+          backgroundPosition: `${-180 - f * 0.6}px 40%`,
+          WebkitBackgroundClip: "text",
+          backgroundClip: "text",
+          color: "transparent",
+          opacity: ease(f, 0, 18),
+        }}
+      >
+        ENERGÍA
+      </div>
+      <Img src={W("d-intro")} style={{ position: "absolute", width: 1, height: 1, opacity: 0 }} />
+      <Small y={860} x={0}>
+        <span style={{ display: "block", width: 1080, textAlign: "center", color: K.gold }}>— real, para tu día.</span>
+      </Small>
+    </Night>
   );
 };
 
-// 7 · "Lista para vender en Shopify." — el carrito real abierto sobre la ficha de producto
-export const W7Shopify: React.FC = () => (
-  <KalpaBg warm={0.6}>
-    <Line>Lista para vender en</Line>
-    <Giant top={200} size={210} color={K.text}>
-      Shopify
-    </Giant>
-    <Sheet src={W("page-producto")} x={-400} y={500} w={1150} h={719} pos="0% 0%" ry={20} rz={-3} seed={5.5} dim={0.35} />
-    <Sheet src={W("d-cart")} x={420} y={420} w={600} h={800} pos="100% 0%" ry={-12} rz={2} seed={5} />
-  </KalpaBg>
+// 3 · El hero: una sola lámina grande y la lista de slides como especificaciones
+export const W3Hero: React.FC = () => (
+  <Night>
+    <Sheet src={W("d-hero-1")} x={40} y={190} w={1000} h={625} seed={0.6} />
+    {[
+      ["01", "Café de VRAEM", true],
+      ["02", "Cold Brew", false],
+      ["03", "Sin crash", false],
+    ].map(([n, t, on], i) => (
+      <div key={String(n)} style={{ position: "absolute", left: 80, top: 900 + i * 92, display: "flex", gap: 28, alignItems: "baseline", opacity: on ? 1 : 0.35 }}>
+        <span style={{ fontFamily: FG, fontWeight: 600, fontSize: 34, color: on ? K.gold : K.muted }}>{n}</span>
+        <span style={{ fontFamily: FG, fontWeight: 900, fontStyle: "italic", fontSize: 64, textTransform: "uppercase", color: K.text }}>{t}</span>
+      </div>
+    ))}
+  </Night>
 );
 
-// 8 · Firma con la marca luismiguel.pe (azul y negro)
-export const W8Firma: React.FC = () => {
+/** Cursor de mouse simple */
+const Cursor: React.FC<{ x: number; y: number }> = ({ x, y }) => (
+  <svg style={{ position: "absolute", left: x, top: y, filter: "drop-shadow(0 6px 10px rgba(0,0,0,.6))" }} width="54" height="64" viewBox="0 0 27 32">
+    <path d="M2 2 L2 26 L8.5 20 L13 30 L17 28.5 L12.6 18.8 L21.5 18.8 Z" fill="#fff" stroke="#000" strokeWidth="1.6" strokeLinejoin="round" />
+  </svg>
+);
+
+// 4 · "…comprar en dos clics." — un número enorme como dato
+export const W4Clics: React.FC = () => (
+  <Night glow="rgba(253,181,21,.16)">
+    <T x={10} y={120} size={760} color={K.gold} italic>
+      2
+    </T>
+    <T x={520} y={300} size={120} delay={8}>
+      clics
+    </T>
+    <Small x={526} y={430} size={44} color={K.text}>
+      para comprar.
+    </Small>
+    <Sheet src={W("page-producto")} x={330} y={720} w={1000} h={625} pos="0% 0%" seed={1.2} />
+    <Cursor x={760} y={1110} />
+  </Night>
+);
+
+// 5 · "Que cuenta de dónde viene cada grano." — texto en columna, la web se sale por la derecha
+export const W5Origen: React.FC = () => (
+  <Night>
+    {["De dónde", "viene", "cada"].map((w, i) => (
+      <T key={w} x={80} y={250 + i * 120} size={110} delay={i * 4}>
+        {w}
+      </T>
+    ))}
+    <T x={74} y={610} size={200} color={K.gold} delay={14}>
+      grano.
+    </T>
+    <Sheet src={W("d-origin")} x={560} y={330} w={1100} h={688} ry={-16} seed={2.2} />
+  </Night>
+);
+
+// 6 · "Y que se ve igual de bien en tu celular." — texto vertical junto a la versión móvil
+export const W6Movil: React.FC = () => (
+  <Night>
+    <div style={{ position: "absolute", left: 120, top: 1240, transform: "rotate(-90deg)", transformOrigin: "0 0" }}>
+      <T x={0} y={0} size={210} outline color={K.text}>
+        igual de bien
+      </T>
+    </div>
+    <Sheet src={W("m-origin")} x={560} y={110} w={460} h={997} rz={2} seed={3.3} />
+    <Small x={560} y={1170} color={K.gold} size={46}>
+      en tu celular.
+    </Small>
+  </Night>
+);
+
+// 7 · "Cinco páginas, un solo sistema." — dos datos como en una ficha técnica
+export const W7Paginas: React.FC = () => (
+  <Night>
+    <T x={60} y={140} size={520} color={K.gold}>
+      5
+    </T>
+    <Small x={400} y={420} size={56} color={K.text}>
+      páginas.
+    </Small>
+    <div style={{ position: "absolute", left: 80, right: 80, top: 700, height: 2, background: "rgba(242,245,248,.15)" }} />
+    <T x={60} y={760} size={520} delay={10}>
+      1
+    </T>
+    <Small x={300} y={1040} size={56} color={K.text}>
+      solo sistema.
+    </Small>
+    <Sheet src={W("page-nosotros")} x={560} y={780} w={640} h={400} ry={-14} seed={4.4} dim={0.15} />
+  </Night>
+);
+
+// 8 · "Lista para vender en Shopify." — el carrito real al centro
+export const W8Shopify: React.FC = () => (
+  <Night glow="rgba(253,181,21,.14)">
+    <Small y={150} x={0}>
+      <span style={{ display: "block", width: 1080, textAlign: "center" }}>Lista para vender en</span>
+    </Small>
+    <T y={210} size={200} align="center">
+      Shopify.
+    </T>
+    <Sheet src={W("d-cart")} x={250} y={480} w={580} h={780} pos="100% 0%" seed={5} />
+  </Night>
+);
+
+// 9 · Firma con la marca luismiguel.pe (azul y negro)
+export const W9Firma: React.FC = () => {
   const f = useCurrentFrame();
   const p = ease(f, 0, 20);
   return (
@@ -315,12 +343,13 @@ export const W8Firma: React.FC = () => {
 };
 
 export const KALPAWEB_SCENES = [
-  { id: "KWeb-1-Intro", component: W1Intro },
+  { id: "KWeb-1-NuevaWeb", component: W1Intro },
   { id: "KWeb-2-Energia", component: W2Energia },
-  { id: "KWeb-3-Tienda", component: W3Tienda },
-  { id: "KWeb-4-Origen", component: W4Origen },
-  { id: "KWeb-5-Movil", component: W5Movil },
-  { id: "KWeb-6-Paginas", component: W6Paginas },
-  { id: "KWeb-7-Shopify", component: W7Shopify },
-  { id: "KWeb-8-Firma", component: W8Firma },
+  { id: "KWeb-3-Hero", component: W3Hero },
+  { id: "KWeb-4-Clics", component: W4Clics },
+  { id: "KWeb-5-Origen", component: W5Origen },
+  { id: "KWeb-6-Movil", component: W6Movil },
+  { id: "KWeb-7-Paginas", component: W7Paginas },
+  { id: "KWeb-8-Shopify", component: W8Shopify },
+  { id: "KWeb-9-Firma", component: W9Firma },
 ];
