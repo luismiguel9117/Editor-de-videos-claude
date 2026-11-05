@@ -41,7 +41,8 @@
     "sfx:generate": "node scripts/sfx-generate.mjs",
     "capture": "node scripts/capture-web.mjs",
     "master": "node scripts/master.mjs",
-    "sfx:premium": "node scripts/sfx-premium.mjs"
+    "sfx:premium": "node scripts/sfx-premium.mjs",
+    "prompts": "node scripts/buscar-prompts.mjs"
   },
   "allowScripts": {
     "esbuild": false

@@ -35,6 +35,18 @@ Lo que lo arruina: sonidos de juguete y saltos bruscos entre escenas.
   los dibujados en CSS plano se ven falsos. Implementado: `remotion/src/videos/kalpaweb/Phone3D.tsx`
   (Three.js + pantalla proyectada en DOM con matrix3d). Render con `--gl=swangle`.
 
+## Reglas tomadas de los mejores prompts de Opus 5.5 (skill prompts-opus-videos)
+- **La cámara nunca se detiene:** empuje lento 1.03–1.07 en cada escena.
+- **Nada aparece de golpe:** las letras suben a través de una máscara una por una; nada "salta" al beat.
+- **Patrones que giran, giran continuo** (no un paso por beat: se lee como tartamudeo).
+- **Cambios de escena con continuidad:** una forma se transforma en la siguiente (disco → pantalla
+  → tarjeta), dentro de la misma transformación de cámara, o salta.
+- **Cada transición demuestra algo del producto**, no solo reemplaza un título por otro.
+- **El video debe entenderse sin sonido**; el sonido suma golpes en cada evento (medidos por su pico).
+- **Mapa de beats:** definir BPM y el beat de cada cambio antes de animar.
+- **QA:** buscar saltos de un solo cuadro, textos cortados, cuadros quietos; corregir antes de entregar.
+- Evitar: logos girando, dashboards falsos, glitch excesivo, texto diminuto, flashes blancos.
+
 ## Antes de animar
 1. Propósito del video y qué elementos reales del producto usar (y cuáles omitir).
 2. Frames estáticos aprobados primero; movimiento después.

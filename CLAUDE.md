@@ -9,6 +9,8 @@
 - Para cualquier animación, transición o sonido, sigue la skill `motion-premium`
   (`.claude/skills/motion-premium/SKILL.md`): producto siempre vivo (entra, asienta, flota),
   transiciones largas y solapadas, sonido sobrio con reverb.
+- Al planear un video nuevo, busca prompts parecidos con la skill `prompts-opus-videos`
+  (`npm run prompts -- …` en `remotion/`) y toma su estructura y reglas, adaptadas a la marca.
 - Composición: el producto es parte de la escena (capturas con fondo transparente, a sangre,
   interactuando con la tipografía). Nada de marcos planos y aburridos. **Sí** a laptops, celulares
   y tablets en 3D con dinamismo (órbitas, revelaciones, primeros planos), como en `referencias/`.
